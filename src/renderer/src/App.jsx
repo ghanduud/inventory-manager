@@ -1,17 +1,14 @@
-// import React from 'react';
-// import { ipcRenderer } from 'electron';
-
 function App() {
-  async function handleAddUser() {
-    const res = await window.apiUser.addUser('Ghandy');
-    console.log(res);
-  }
+	async function handleAddUser() {
+		const res = await window.apiManufacture.getManufacture(1);
+		console.log(res);
+	}
 
-  return (
-    <div>
-      <button onClick={handleAddUser}>Add user</button>
-    </div>
-  );
+	return (
+		<div>
+			<button onClick={handleAddUser}>Add Manufacture</button>
+		</div>
+	);
 }
 
 export default App;
