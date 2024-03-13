@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from './sqlite';
 
-export const Type = sequelize.define('Type', {
+export const Size = sequelize.define('Size', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -13,23 +13,23 @@ export const Type = sequelize.define('Type', {
 	},
 });
 
-async function addType(name) {
+async function addSize(name) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Type table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Types')) {
+		if (!tableExists.includes('Sizes')) {
 			// If the table doesn't exist, create it
-			await Type.sync();
+			await Size.sync();
 			// console.log('Type table created.');
 		} else {
 			// console.log('Type table already exists.');
 		}
 
 		// Add the provided Type to the table
-		await Type.create({
+		await Size.create({
 			name: name,
 		});
 		// console.log(`Type ${name} added.`);
@@ -38,59 +38,59 @@ async function addType(name) {
 	}
 }
 
-async function getTypes() {
+async function getSizes() {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Type table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Types')) {
+		if (!tableExists.includes('Sizes')) {
 			// console.log('Type table does not exist.');
 			return [];
 		}
 
 		// Retrieve all Types from the table
-		const allTypes = await Type.findAll();
+		const allSizes = await Size.findAll();
 		// console.log('All Types in the table:', allTypes);
 
-		return allTypes;
+		return allSizes;
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
 		return [];
 	}
 }
 
-async function getType(id) {
+async function getSize(id) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Type table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Types')) {
+		if (!tableExists.includes('Sizes')) {
 			// console.log('Type table does not exist.');
 			return null;
 		}
 
 		// Retrieve the Type with the specified ID
-		const Type = await Type.findByPk(id);
+		const Size = await Size.findByPk(id);
 
-		if (!Type) {
+		if (!Size) {
 			// console.log(`Type with ID ${id} not found.`);
 			return null;
 		}
 
 		// console.log('Type:', Type);
-		return Type;
+		return Size;
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
 		return null;
 	}
 }
 
-export const apiType = {
-	addType,
-	getTypes,
-	getType,
+export const apiSize = {
+	addSize,
+	getSizes,
+	getSize,
 };

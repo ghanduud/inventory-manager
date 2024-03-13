@@ -1,36 +1,40 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from './sqlite';
 
-export const Category = sequelize.define('Category', {
+export const Inventory = sequelize.define('Inventory', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
 		autoIncrement: true,
 	},
-	name: {
+	location: {
 		type: DataTypes.STRING,
 		allowNull: false,
 	},
+	maxCapacity: {
+		type: DataTypes.INTEGER,
+	},
 });
 
-async function addCategory(name) {
+async function addInventory(location, maxCapacity = 0) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Category table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Categories')) {
+		if (!tableExists.includes('Inventories')) {
 			// If the table doesn't exist, create it
-			await Category.sync();
+			await Inventory.sync();
 			// console.log('Category table created.');
 		} else {
 			// console.log('Category table already exists.');
 		}
 
 		// Add the provided Category to the table
-		await Category.create({
-			name: name,
+		await Inventory.create({
+			location: location,
+			maxCapacity: maxCapacity,
 		});
 		// console.log(`Category ${name} added.`);
 	} catch (error) {
@@ -38,59 +42,59 @@ async function addCategory(name) {
 	}
 }
 
-async function getCategories() {
+async function getInventories() {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Category table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Categories')) {
+		if (!tableExists.includes('Inventories')) {
 			// console.log('Category table does not exist.');
 			return [];
 		}
 
 		// Retrieve all Categorys from the table
-		const allCategories = await Category.findAll();
+		const allInventories = await Inventory.findAll();
 		// console.log('All Categorys in the table:', allCategorys);
 
-		return allCategories;
+		return allInventories;
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
 		return [];
 	}
 }
 
-async function getCategory(id) {
+async function getInventory(id) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Category table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Categories')) {
+		if (!tableExists.includes('Inventories')) {
 			// console.log('Category table does not exist.');
 			return null;
 		}
 
 		// Retrieve the Category with the specified ID
-		const Category = await Category.findByPk(id);
+		const Inventory = await Inventory.findByPk(id);
 
-		if (!Category) {
-			// console.log(`Category with ID ${id} not found.`);
+		if (!Inventory) {
+			// console.log(`Inventory with ID ${id} not found.`);
 			return null;
 		}
 
-		// console.log('Category:', Category);
-		return Category;
+		// console.log('Inventory:', Inventory);
+		return Inventory;
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
 		return null;
 	}
 }
 
-export const apiCategory = {
-	addCategory,
-	getCategories,
-	getCategory,
+export const apiInventory = {
+	addInventory,
+	getInventories,
+	getInventory,
 };

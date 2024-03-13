@@ -1,6 +1,6 @@
 function App() {
 	async function handleAddUser() {
-		const res = await window.apiManufacture.getManufacture(1);
+		const res = await window.apiCategory.addCategory('Moshtrk');
 		console.log(res);
 	}
 

@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from './sqlite';
 
-const Manufacture = sequelize.define('Manufacture', {
+export const Manufacture = sequelize.define('Manufacture', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
