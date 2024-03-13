@@ -42,6 +42,27 @@ async function addItem(
 	numberOfPieces
 ) {
 	try {
+		// Find associated Category, Type, Size, and Inventory records
+		const category = await Category.findByPk(categoryId);
+		const type = await Type.findByPk(typeId);
+		const size = await Size.findByPk(sizeId);
+		const inventory = await Inventory.findByPk(inventoryId);
+		const manufacture = await Manufacture.findByPk(manufactureId);
+
+		if (!category || !type || !size || !inventory || !manufacture) {
+			console.error('Invalid Category, Type, Size, or Inventory ID');
+			return null;
+		}
+
+		// Calculate the total weight of the items to be added
+		const totalWeight = weightPerPiece * numberOfPieces;
+
+		// Check if the destination inventory has enough capacity
+		if (inventory.maxCapacity && totalWeight > inventory.maxCapacity) {
+			console.error(`Not enough capacity in the inventory for the items.`);
+			return null;
+		}
+
 		// Check if an item with the same characteristics already exists
 		const existingItem = await Item.findOne({
 			where: {
@@ -60,18 +81,6 @@ async function addItem(
 
 			console.log('Item already exists. Number of pieces updated:', existingItem.toJSON());
 			return existingItem;
-		}
-
-		// Find associated Category, Type, Size, and Inventory records
-		const category = await Category.findByPk(categoryId);
-		const type = await Type.findByPk(typeId);
-		const size = await Size.findByPk(sizeId);
-		const inventory = await Inventory.findByPk(inventoryId);
-		const manufacture = await Manufacture.findByPk(manufactureId);
-
-		if (!category || !type || !size || !inventory || !manufacture) {
-			console.error('Invalid Category, Type, Size, or Inventory ID');
-			return null;
 		}
 
 		// Create the Item record with associations
@@ -194,9 +203,12 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 			return null;
 		}
 
-		// Check if there's enough quantity to transfer
-		if (itemToTransfer.numberOfPieces < numberOfPieces) {
-			console.error(`Not enough pieces to transfer for item with ID ${itemId}.`);
+		// Calculate the total weight of the items to be transferred
+		const totalWeight = itemToTransfer.weightPerPiece * numberOfPieces;
+
+		// Check if the destination inventory has enough capacity
+		if (destinationInventory.maxCapacity && totalWeight > destinationInventory.maxCapacity) {
+			console.error(`Not enough capacity in the destination inventory for the items.`);
 			return null;
 		}
 
@@ -215,6 +227,12 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 				numberOfPieces: 0,
 			},
 		});
+
+		// Check if there's enough quantity to transfer
+		if (itemToTransfer.numberOfPieces < numberOfPieces) {
+			console.error(`Not enough pieces to transfer for item with ID ${itemId}.`);
+			return null;
+		}
 
 		// Update the destination item
 		destinationItem.numberOfPieces += numberOfPieces;
