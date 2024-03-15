@@ -47,20 +47,26 @@ async function getInventories() {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
-		// Check if the Category table exists
+		// Check if the Inventory table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Inventories')) {
-			// console.log('Category table does not exist.');
 			return [];
 		}
 
-		// Retrieve all Categorys from the table
-		const allInventories = await Inventory.findAll();
-		// console.log('All Categorys in the table:', allCategorys);
+		// Retrieve all inventories from the table with only the necessary attributes
+		const allInventories = await Inventory.findAll({
+			attributes: ['id', 'location', 'maxCapacity'],
+		});
 
-		return allInventories;
+		// Extract necessary attributes from each inventory object
+		const inventoriesData = allInventories.map((inventory) => ({
+			id: inventory.id,
+			location: inventory.location,
+			maxCapacity: inventory.maxCapacity,
+		}));
+		return inventoriesData;
 	} catch (error) {
-		// console.error('Error syncing Category model:', error);
+		console.error('Error getting inventories:', error);
 		return [];
 	}
 }

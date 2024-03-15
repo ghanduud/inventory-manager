@@ -21,6 +21,8 @@ function createWindow() {
 		},
 	});
 
+	mainWindow.maximize();
+
 	mainWindow.on('ready-to-show', () => {
 		mainWindow.show();
 	});

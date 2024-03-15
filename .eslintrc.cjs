@@ -5,4 +5,7 @@ module.exports = {
 		'plugin:react/jsx-runtime',
 		'@electron-toolkit',
 	],
+	rules: {
+		'react/prop-types': 'off', // Disable prop-types validation
+	},
 };

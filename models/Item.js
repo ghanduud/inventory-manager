@@ -131,11 +131,20 @@ async function getAllItemsWithDetails() {
 			],
 		});
 
-		console.log(
-			'All items with details:',
-			items.map((item) => item.toJSON())
-		);
-		return items;
+		// Extract necessary values from each item
+		const itemsWithDetails = items.map((item) => ({
+			id: item.id,
+			weightPerPiece: item.weightPerPiece,
+			pricePerKilo: item.pricePerKilo,
+			numberOfPieces: item.numberOfPieces,
+			manufacture: item.Manufacture ? item.Manufacture.name : null,
+			category: item.Category ? item.Category.name : null,
+			type: item.Type ? item.Type.name : null,
+			size: item.Size ? item.Size.name : null,
+			inventoryLocation: item.Inventory ? item.Inventory.location : null,
+		}));
+
+		return itemsWithDetails;
 	} catch (error) {
 		console.error('Error getting items with details:', error);
 		return null;
