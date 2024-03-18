@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { getManufactures } from '../../services/apiManufacture';
 
-export function useManufacrure() {
+export function useManufacture() {
 	const {
 		isLoading,
 		data: manufactures,

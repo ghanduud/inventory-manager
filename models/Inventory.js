@@ -54,9 +54,7 @@ async function getInventories() {
 		}
 
 		// Retrieve all inventories from the table with only the necessary attributes
-		const allInventories = await Inventory.findAll({
-			attributes: ['id', 'location', 'maxCapacity'],
-		});
+		const allInventories = await Inventory.findAll();
 
 		// Extract necessary attributes from each inventory object
 		const inventoriesData = allInventories.map((inventory) => ({

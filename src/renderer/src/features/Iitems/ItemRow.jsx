@@ -34,6 +34,8 @@ function ItemRow({ item }) {
 		weightPerPiece,
 	} = item;
 
+	const totalWeight = numberOfPieces * weightPerPiece;
+
 	return (
 		<Table.Row>
 			<Cell>{category}</Cell>
@@ -43,6 +45,7 @@ function ItemRow({ item }) {
 			<Cell>{pricePerKilo}</Cell>
 			<Cell>{weightPerPiece}</Cell>
 			<Cell>{numberOfPieces}</Cell>
+			<Cell>{totalWeight}</Cell>
 			<Cell>{inventoryLocation}</Cell>
 			<Toggle>
 				<Modal>

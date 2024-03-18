@@ -4,7 +4,6 @@ export async function getItems() {
 }
 
 export async function transfareItems({ id, amount, inventoryId }) {
-	console.log(id, amount, inventoryId);
 	const data = window.apiItem.transferItems(id, amount, inventoryId);
 	return data;
 }

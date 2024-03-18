@@ -9,7 +9,6 @@ import Spinner from '../../components/Spinner';
 import Select from '../../components/Select';
 import Button from '../../components/Button';
 import { useTransfareItems } from './useTransfareItems';
-import toast from 'react-hot-toast';
 
 function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 	const { transfareItems, isTransfering } = useTransfareItems();
@@ -27,7 +26,6 @@ function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 			id: itemToTransefareFrom.id,
 			inventoryId: Number(selectedInventory),
 		};
-		console.log(formData);
 		transfareItems(formData, {
 			onSuccess: () => {
 				reset();

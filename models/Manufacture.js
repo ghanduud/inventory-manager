@@ -62,7 +62,14 @@ async function getManufactures() {
 		const allManufactures = await Manufacture.findAll();
 		// console.log('All manufactures in the table:', allManufactures);
 
-		return allManufactures;
+		const manufacturesData = allManufactures.map((manufacture) => ({
+			id: manufacture.id,
+			name: manufacture.name,
+			phoneNumber: manufacture.phoneNumber,
+			email: manufacture.email,
+		}));
+
+		return manufacturesData;
 	} catch (error) {
 		// console.error('Error syncing Manufacture model:', error);
 		return [];

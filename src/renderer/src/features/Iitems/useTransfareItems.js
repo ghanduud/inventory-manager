@@ -10,8 +10,9 @@ export function useTransfareItems() {
 		mutationFn: apiTransefareItems,
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ['items'] });
+			toast.success('Transefare done successfully');
 		},
-		onError: (err) => console.log(err),
+		onError: (err) => toast.error(`Error in transefare ${err}`),
 	});
 
 	return { transfareItems, isTransfering };

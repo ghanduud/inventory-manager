@@ -54,7 +54,12 @@ async function getTypes() {
 		const allTypes = await Type.findAll();
 		// console.log('All Types in the table:', allTypes);
 
-		return allTypes;
+		const typesData = allTypes.map((type) => ({
+			id: type.id,
+			name: type.name,
+		}));
+
+		return typesData;
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
 		return [];

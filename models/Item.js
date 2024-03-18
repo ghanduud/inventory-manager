@@ -258,10 +258,6 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 			await itemToTransfer.save();
 		}
 
-		console.log(
-			`Transferred ${numberOfPieces} pieces from item ${itemId} to inventory ${destinationInventoryId}.`
-		);
-
 		return destinationItem;
 	} catch (error) {
 		console.error('Error transferring items:', error);

@@ -50,11 +50,16 @@ async function getCategories() {
 			return [];
 		}
 
-		// Retrieve all Categorys from the table
+		// Retrieve all Categories from the table with only the necessary attributes
 		const allCategories = await Category.findAll();
-		// console.log('All Categorys in the table:', allCategorys);
 
-		return allCategories;
+		const categoryData = allCategories.map((category) => ({
+			id: category.id,
+			name: category.name,
+		}));
+		// console.log('All Categories in the table:', allCategories);
+
+		return categoryData;
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
 		return [];
