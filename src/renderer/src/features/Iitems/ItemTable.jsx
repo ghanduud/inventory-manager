@@ -9,16 +9,18 @@ import { useSearchParams } from 'react-router-dom';
 
 function ItemTable() {
 	const { isLoading, items } = useItems();
+
 	const [searchParams] = useSearchParams();
 
 	if (isLoading) return <Spinner />;
-	if (!items.length) return <Empty resourceName='Items' />;
+	if (!items?.length) return <Empty resourceName='Items' />;
 
 	const categoryValue = searchParams.get('categoryFilter') || '';
 	const inventoryValue = searchParams.get('inventoryFilter') || '';
 	const sizeValue = searchParams.get('sizeFilter') || '';
 	const typeValue = searchParams.get('typeFilter') || '';
 	const manufactureValue = searchParams.get('manufactureFilter') || '';
+	const materialValue = searchParams.get('materialFilter') || '';
 
 	let filteredItems = [...items];
 
@@ -30,17 +32,20 @@ function ItemTable() {
 	if (typeValue !== '') filteredItems = [...filteredItems.filter((item) => item.type === typeValue)];
 	if (manufactureValue !== '')
 		filteredItems = [...filteredItems.filter((item) => item.manufacture === manufactureValue)];
+	if (materialValue !== '')
+		filteredItems = [...filteredItems.filter((item) => item.material === materialValue)];
 
 	return (
 		<Menus>
-			<Table columns='0.8fr 0.8fr .5fr 1fr .8fr .8fr 1fr .8fr 0.8fr 0.1fr'>
+			<Table columns='0.8fr 0.8fr 0.8fr .5fr 1fr .8fr .8fr 1fr .8fr 0.8fr 0.1fr'>
 				<Table.Header>
 					<div>Category</div>
+					<div>Material</div>
 					<div>Type</div>
 					<div>Size</div>
 					<div>Manufacture</div>
-					<div>Price per kilo</div>
-					<div>Weight per piece</div>
+					<div>Price / kilo</div>
+					<div>Weight / piece</div>
 					<div>Number of Pieces</div>
 					<div>Total weight</div>
 					<div>Inventory</div>

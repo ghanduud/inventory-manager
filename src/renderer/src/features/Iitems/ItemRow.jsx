@@ -25,6 +25,7 @@ function ItemRow({ item }) {
 	const {
 		id: itemId,
 		category,
+		material,
 		inventoryLocation,
 		manufacture,
 		numberOfPieces,
@@ -36,9 +37,12 @@ function ItemRow({ item }) {
 
 	const totalWeight = numberOfPieces * weightPerPiece;
 
+	console.log(item);
+
 	return (
 		<Table.Row>
 			<Cell>{category}</Cell>
+			<Cell>{material}</Cell>
 			<Cell>{type}</Cell>
 			<Cell>{size}</Cell>
 			<Cell>{manufacture}</Cell>

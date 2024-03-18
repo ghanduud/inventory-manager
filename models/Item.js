@@ -5,6 +5,7 @@ import { Category } from './Category';
 import { Type } from './Type';
 import { Size } from './Size';
 import { Inventory } from './Inventory';
+import { Material } from './Material';
 
 export const Item = sequelize.define('Item', {
 	id: {
@@ -30,6 +31,7 @@ Item.belongsTo(Category);
 Item.belongsTo(Type);
 Item.belongsTo(Size);
 Item.belongsTo(Inventory);
+Item.belongsTo(Material);
 
 async function addItem(
 	categoryId,
@@ -37,6 +39,7 @@ async function addItem(
 	sizeId,
 	inventoryId,
 	manufactureId,
+	materialId,
 	weightPerPiece,
 	pricePerKilo,
 	numberOfPieces
@@ -48,18 +51,19 @@ async function addItem(
 		const size = await Size.findByPk(sizeId);
 		const inventory = await Inventory.findByPk(inventoryId);
 		const manufacture = await Manufacture.findByPk(manufactureId);
+		const material = await Material.findByPk(materialId);
 
-		if (!category || !type || !size || !inventory || !manufacture) {
+		if (!category || !type || !size || !inventory || !manufacture || !material) {
 			console.error('Invalid Category, Type, Size, or Inventory ID');
 			return null;
 		}
 
-		// Calculate the total weight of the items to be added
+		// Calculate the total weight of the new items
 		const totalWeight = weightPerPiece * numberOfPieces;
 
-		// Check if the destination inventory has enough capacity
-		if (inventory.maxCapacity && totalWeight > inventory.maxCapacity) {
-			console.error(`Not enough capacity in the inventory for the items.`);
+		// Check if adding the new items will exceed the maxCapacity of the inventory
+		if (inventory.currentCapacity + totalWeight > inventory.maxCapacity) {
+			console.error('Adding the new items will exceed the maxCapacity of the inventory');
 			return null;
 		}
 
@@ -71,6 +75,7 @@ async function addItem(
 				SizeId: sizeId,
 				ManufactureId: manufactureId,
 				InventoryId: inventoryId,
+				MaterialId: materialId,
 			},
 		});
 
@@ -79,7 +84,10 @@ async function addItem(
 			existingItem.numberOfPieces += numberOfPieces;
 			await existingItem.save();
 
-			console.log('Item already exists. Number of pieces updated:', existingItem.toJSON());
+			// Update the currentCapacity of the inventory
+			inventory.currentCapacity += totalWeight;
+			await inventory.save();
+
 			return existingItem;
 		}
 
@@ -93,9 +101,13 @@ async function addItem(
 			SizeId: sizeId,
 			ManufactureId: manufactureId,
 			InventoryId: inventoryId,
+			MaterialId: materialId,
 		});
 
-		console.log('Item added:', newItem.toJSON());
+		// Update the currentCapacity of the inventory
+		inventory.currentCapacity += totalWeight;
+		await inventory.save();
+
 		return newItem;
 	} catch (error) {
 		console.error('Error adding Item:', error);
@@ -128,6 +140,10 @@ async function getAllItemsWithDetails() {
 					model: Inventory,
 					attributes: ['location'],
 				},
+				{
+					model: Material,
+					attributes: ['name'],
+				},
 			],
 		});
 
@@ -142,6 +158,7 @@ async function getAllItemsWithDetails() {
 			type: item.Type ? item.Type.name : null,
 			size: item.Size ? item.Size.name : null,
 			inventoryLocation: item.Inventory ? item.Inventory.location : null,
+			material: item.Material ? item.Material.name : null,
 		}));
 
 		return itemsWithDetails;
@@ -175,6 +192,10 @@ async function getItemWithDetailsById(itemId) {
 				{
 					model: Inventory,
 					attributes: ['location'],
+				},
+				{
+					model: Material,
+					attributes: ['name'],
 				},
 			],
 		});
@@ -228,6 +249,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 				TypeId: itemToTransfer.TypeId,
 				SizeId: itemToTransfer.SizeId,
 				ManufactureId: itemToTransfer.ManufactureId,
+				MaterialId: itemToTransfer.ManufactureId,
 				InventoryId: destinationInventoryId,
 			},
 			defaults: {
@@ -257,6 +279,15 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 		} else {
 			await itemToTransfer.save();
 		}
+
+		// Update currentCapacity of the destination inventory
+		destinationInventory.currentCapacity += totalWeight;
+		await destinationInventory.save();
+
+		// Update currentCapacity of the source inventory
+		const sourceInventory = await Inventory.findByPk(itemToTransfer.InventoryId);
+		sourceInventory.currentCapacity -= totalWeight;
+		await sourceInventory.save();
 
 		return destinationItem;
 	} catch (error) {

@@ -79,15 +79,15 @@ async function getSize(id) {
 		}
 
 		// Retrieve the Type with the specified ID
-		const Size = await Size.findByPk(id);
+		const size = await Size.findByPk(id);
 
-		if (!Size) {
+		if (!size) {
 			// console.log(`Type with ID ${id} not found.`);
 			return null;
 		}
 
 		// console.log('Type:', Type);
-		return Size;
+		return size;
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
 		return null;

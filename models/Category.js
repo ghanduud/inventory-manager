@@ -79,15 +79,15 @@ async function getCategory(id) {
 		}
 
 		// Retrieve the Category with the specified ID
-		const Category = await Category.findByPk(id);
+		const category = await Category.findByPk(id);
 
-		if (!Category) {
+		if (!category) {
 			// console.log(`Category with ID ${id} not found.`);
 			return null;
 		}
 
 		// console.log('Category:', Category);
-		return Category;
+		return category;
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
 		return null;

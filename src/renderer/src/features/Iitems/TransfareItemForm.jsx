@@ -1,14 +1,13 @@
 import { useForm } from 'react-hook-form';
 import { useInventory } from '../inventories/useInventory';
-import { useState } from 'react';
 
 import Form from '../../components/Form';
 import FormRow from '../../components/FormRow';
 import Input from '../../components/Input';
 import Spinner from '../../components/Spinner';
-import Select from '../../components/Select';
 import Button from '../../components/Button';
 import { useTransfareItems } from './useTransfareItems';
+import SelectForm from '../../components/SelectForm';
 
 function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 	const { transfareItems, isTransfering } = useTransfareItems();
@@ -17,14 +16,12 @@ function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 	const { register, handleSubmit, reset, formState } = useForm();
 	const { errors } = formState;
 
-	const [selectedInventory, setSelectedInventory] = useState(inventories?.at(0).id || '');
-
 	// State to store the selected inventory ID
 	function onSubmit(data) {
 		const formData = {
 			amount: Number(data.amount),
 			id: itemToTransefareFrom.id,
-			inventoryId: Number(selectedInventory),
+			inventoryId: data.inventoryId,
 		};
 		transfareItems(formData, {
 			onSuccess: () => {
@@ -55,10 +52,9 @@ function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 				/>
 			</FormRow>
 			<FormRow label='Destination inventory' error={errors?.name?.message}>
-				<Select
+				<SelectForm
 					options={inventories.map((inventory) => ({ value: inventory.id, label: inventory.location }))}
-					value={selectedInventory}
-					onChange={(e) => setSelectedInventory(e.target.value)}
+					register={register}
 					type='white'
 				/>
 			</FormRow>

@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from './sqlite';
 
-export const Type = sequelize.define('Type', {
+export const Material = sequelize.define('Material', {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -13,23 +13,23 @@ export const Type = sequelize.define('Type', {
 	},
 });
 
-async function addType(name) {
+async function addMaterial(name) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Type table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Types')) {
+		if (!tableExists.includes('Materials')) {
 			// If the table doesn't exist, create it
-			await Type.sync();
+			await Material.sync();
 			// console.log('Type table created.');
 		} else {
 			// console.log('Type table already exists.');
 		}
 
 		// Add the provided Type to the table
-		await Type.create({
+		await Material.create({
 			name: name,
 		});
 		// console.log(`Type ${name} added.`);
@@ -38,64 +38,64 @@ async function addType(name) {
 	}
 }
 
-async function getTypes() {
+async function getMaterials() {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Type table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Types')) {
+		if (!tableExists.includes('Materials')) {
 			// console.log('Type table does not exist.');
 			return [];
 		}
 
 		// Retrieve all Types from the table
-		const allTypes = await Type.findAll();
+		const allMaterials = await Material.findAll();
 		// console.log('All Types in the table:', allTypes);
 
-		const typesData = allTypes.map((type) => ({
-			id: type.id,
-			name: type.name,
+		const materialsData = allMaterials.map((material) => ({
+			id: material.id,
+			name: material.name,
 		}));
 
-		return typesData;
+		return materialsData;
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
 		return [];
 	}
 }
 
-async function getType(id) {
+async function getMaterial(id) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
 
 		// Check if the Type table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
-		if (!tableExists.includes('Types')) {
+		if (!tableExists.includes('Materials')) {
 			// console.log('Type table does not exist.');
 			return null;
 		}
 
 		// Retrieve the Type with the specified ID
-		const type = await Type.findByPk(id);
+		const material = await Material.findByPk(id);
 
-		if (!type) {
+		if (!material) {
 			// console.log(`Type with ID ${id} not found.`);
 			return null;
 		}
 
 		// console.log('Type:', Type);
-		return type;
+		return material;
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
 		return null;
 	}
 }
 
-export const apiType = {
-	addType,
-	getTypes,
-	getType,
+export const apiMaterial = {
+	addMaterial,
+	getMaterials,
+	getMaterial,
 };
