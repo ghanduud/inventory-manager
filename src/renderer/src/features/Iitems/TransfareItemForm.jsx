@@ -29,7 +29,7 @@ function TransfareItemForm({ itemToTransferFrom, onCloseModal, totalItemWeight }
 			};
 		} else {
 			formData = {
-				amount: Number(data.amount),
+				amount: data.amount,
 				id: itemToTransferFrom.id,
 				inventoryId: data.inventoryId, // Make sure to include the selected option for the first select element
 			};

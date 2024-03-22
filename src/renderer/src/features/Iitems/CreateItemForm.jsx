@@ -41,13 +41,7 @@ function CreateItemForm({ onCloseModal }) {
 	const { errors } = formState;
 
 	function onSubmit(data) {
-		const numberedData = {
-			...data,
-			weightPerPiece: data.weightPerPiece,
-			numberOfPieces: data.numberOfPieces,
-			kilo: data.kilo,
-		};
-		createItem(numberedData, {
+		createItem(data, {
 			onSuccess: () => {
 				reset();
 				onCloseModal?.();
