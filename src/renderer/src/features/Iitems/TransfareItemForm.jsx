@@ -9,7 +9,7 @@ import Button from '../../components/Button';
 import { useTransfareItems } from './useTransfareItems';
 import SelectForm from '../../components/SelectForm';
 
-function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
+function TransfareItemForm({ itemToTransferFrom, onCloseModal, totalItemWeight }) {
 	const { transfareItems, isTransfering } = useTransfareItems();
 
 	const { isLoading, inventories } = useInventory();
@@ -18,11 +18,23 @@ function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 
 	// State to store the selected inventory ID
 	function onSubmit(data) {
-		const formData = {
-			amount: Number(data.amount),
-			id: itemToTransefareFrom.id,
-			inventoryId: data.inventoryId,
-		};
+		let formData;
+
+		if (data.sendBy === 'kilo') {
+			const amount = (data.amount * itemToTransferFrom.numberOfPieces) / totalItemWeight;
+			formData = {
+				amount,
+				id: itemToTransferFrom.id,
+				inventoryId: data.inventoryId, // Make sure to include the selected option for the first select element
+			};
+		} else {
+			formData = {
+				amount: Number(data.amount),
+				id: itemToTransferFrom.id,
+				inventoryId: data.inventoryId, // Make sure to include the selected option for the first select element
+			};
+		}
+
 		transfareItems(formData, {
 			onSuccess: () => {
 				reset();
@@ -39,7 +51,18 @@ function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'modal' : 'regular'}>
-			<FormRow label='Amount to transfare' error={errors?.amount?.message}>
+			<FormRow label='You want to send by: ' error={errors?.sendBy?.message}>
+				<SelectForm
+					options={[
+						{ value: 'pieces', label: 'Pieces' },
+						{ value: 'kilo', label: 'Kilo' },
+					]}
+					register={register}
+					type='white'
+					name='sendBy' // Make sure to provide a name for the select element
+				/>
+			</FormRow>
+			<FormRow label='Amount to transfer' error={errors?.amount?.message}>
 				<Input
 					type='number'
 					id='amount'
@@ -47,22 +70,23 @@ function TransfareItemForm({ itemToTransefareFrom, onCloseModal }) {
 					{...register('amount', {
 						required: 'This field is required',
 						validate: (value) =>
-							Number(value) <= Number(itemToTransefareFrom.numberOfPieces) || 'no eanough transefare items',
+							Number(value) <= Number(itemToTransferFrom.numberOfPieces) || 'Not enough transferable items',
 					})}
 				/>
 			</FormRow>
-			<FormRow label='Destination inventory' error={errors?.name?.message}>
+			<FormRow label='Destination inventory' error={errors?.inventoryId?.message}>
 				<SelectForm
 					options={inventories.map((inventory) => ({ value: inventory.id, label: inventory.location }))}
 					register={register}
 					type='white'
+					name='inventoryId' // Make sure to provide a name for the select element
 				/>
 			</FormRow>
 			<FormRow>
 				<Button variation='secondary' type='reset' onClick={() => onCloseModal?.()}>
 					Cancel
 				</Button>
-				<Button disabled={isTransfering}>Transefare</Button>
+				<Button disabled={isTransfering}>Transfer</Button>
 			</FormRow>
 		</Form>
 	);

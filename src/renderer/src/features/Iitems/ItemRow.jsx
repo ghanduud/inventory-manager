@@ -6,6 +6,10 @@ import Table from '../../components/Table';
 import Menus from '../../components/Menus';
 import Modal from '../../components/Modal';
 import TransfareItemForm from './TransfareItemForm';
+import { HiTrash } from 'react-icons/hi2';
+import { useDeleteItem } from './useDeleteItem';
+
+import ConfirmDelete from '../../components/ConfirmDelete';
 
 const Cell = styled.div`
 	padding: 1.3rem 2.4rem;
@@ -22,6 +26,8 @@ const Toggle = styled.div`
 `;
 
 function ItemRow({ item }) {
+	const { isDeleting, deleteItem } = useDeleteItem();
+
 	const {
 		id: itemId,
 		category,
@@ -36,8 +42,6 @@ function ItemRow({ item }) {
 	} = item;
 
 	const totalWeight = numberOfPieces * weightPerPiece;
-
-	console.log(item);
 
 	return (
 		<Table.Row>
@@ -60,10 +64,23 @@ function ItemRow({ item }) {
 							<Modal.Open opens='transfare'>
 								<Menus.Button icon={<TbTransform />}>Transefare</Menus.Button>
 							</Modal.Open>
+							<Modal.Open opens='delete'>
+								<Menus.Button menutype='delete' icon={<HiTrash />}>
+									Delete
+								</Menus.Button>
+							</Modal.Open>
 						</Menus.List>
 
 						<Modal.Window name='transfare'>
-							<TransfareItemForm itemToTransefareFrom={item} />
+							<TransfareItemForm itemToTransferFrom={item} totalItemWeight={totalWeight} />
+						</Modal.Window>
+
+						<Modal.Window name='delete'>
+							<ConfirmDelete
+								resourceName='cabins'
+								disabled={isDeleting}
+								onConfirm={() => deleteItem(itemId)}
+							/>
 						</Modal.Window>
 					</Menus.Menu>
 				</Modal>

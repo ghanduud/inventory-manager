@@ -10,11 +10,11 @@ function ItemOperations() {
 	return (
 		<TableOperations>
 			<CategoryFilter />
+			<MaterialFilter />
 			<TypeFilter />
 			<SizeFilter />
 			<ManufactureFilter />
 			<InventoryFilter />
-			<MaterialFilter />
 		</TableOperations>
 	);
 }

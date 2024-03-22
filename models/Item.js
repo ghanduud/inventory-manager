@@ -33,7 +33,7 @@ Item.belongsTo(Size);
 Item.belongsTo(Inventory);
 Item.belongsTo(Material);
 
-async function addItem(
+async function addItem({
 	categoryId,
 	typeId,
 	sizeId,
@@ -42,8 +42,10 @@ async function addItem(
 	materialId,
 	weightPerPiece,
 	pricePerKilo,
-	numberOfPieces
-) {
+	numberOfPieces,
+}) {
+	const numberOfItems = Number(numberOfPieces);
+	const weightOfItem = Number(weightPerPiece);
 	try {
 		// Find associated Category, Type, Size, and Inventory records
 		const category = await Category.findByPk(categoryId);
@@ -59,7 +61,7 @@ async function addItem(
 		}
 
 		// Calculate the total weight of the new items
-		const totalWeight = weightPerPiece * numberOfPieces;
+		const totalWeight = weightOfItem * numberOfItems;
 
 		// Check if adding the new items will exceed the maxCapacity of the inventory
 		if (inventory.currentCapacity + totalWeight > inventory.maxCapacity) {
@@ -81,7 +83,7 @@ async function addItem(
 
 		if (existingItem) {
 			// If the item exists, update the numberOfPieces
-			existingItem.numberOfPieces += numberOfPieces;
+			existingItem.numberOfPieces += numberOfItems;
 			await existingItem.save();
 
 			// Update the currentCapacity of the inventory
@@ -93,9 +95,9 @@ async function addItem(
 
 		// Create the Item record with associations
 		const newItem = await Item.create({
-			weightPerPiece,
+			weightPerPiece: weightOfItem,
 			pricePerKilo,
-			numberOfPieces,
+			numberOfPieces: numberOfItems,
 			CategoryId: categoryId,
 			TypeId: typeId,
 			SizeId: sizeId,
@@ -214,6 +216,8 @@ async function getItemWithDetailsById(itemId) {
 }
 
 async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
+	const numberOfItems = Number(numberOfPieces);
+
 	try {
 		// Find the item to be transferred
 		const itemToTransfer = await Item.findByPk(itemId, {
@@ -234,7 +238,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 		}
 
 		// Calculate the total weight of the items to be transferred
-		const totalWeight = itemToTransfer.weightPerPiece * numberOfPieces;
+		const totalWeight = itemToTransfer.weightPerPiece * numberOfItems;
 
 		// Check if the destination inventory has enough capacity
 		if (destinationInventory.maxCapacity && totalWeight > destinationInventory.maxCapacity) {
@@ -260,17 +264,17 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 		});
 
 		// Check if there's enough quantity to transfer
-		if (itemToTransfer.numberOfPieces < numberOfPieces) {
+		if (itemToTransfer.numberOfPieces < numberOfItems) {
 			console.error(`Not enough pieces to transfer for item with ID ${itemId}.`);
 			return null;
 		}
 
 		// Update the destination item
-		destinationItem.numberOfPieces += numberOfPieces;
+		destinationItem.numberOfPieces += numberOfItems;
 		await destinationItem.save();
 
 		// Update the source item
-		itemToTransfer.numberOfPieces -= numberOfPieces;
+		itemToTransfer.numberOfPieces -= numberOfItems;
 
 		// If the source item's numberOfPieces is zero, delete the item
 		if (itemToTransfer.numberOfPieces === 0) {
@@ -296,9 +300,49 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 	}
 }
 
+async function deleteItemById(itemId) {
+	try {
+		// Find the item by its ID
+		const item = await Item.findByPk(itemId);
+
+		if (!item) {
+			console.error(`Item with ID ${itemId} not found.`);
+			return null;
+		}
+
+		// Get the associated inventory ID and weight per piece
+		const { InventoryId, weightPerPiece } = item;
+
+		// Calculate the total weight of the item
+		const totalWeight = weightPerPiece * item.numberOfPieces;
+
+		// Retrieve the corresponding inventory record
+		const inventory = await Inventory.findByPk(InventoryId);
+
+		if (!inventory) {
+			console.error(`Inventory with ID ${InventoryId} not found.`);
+			return null;
+		}
+
+		// Update the current capacity of the inventory
+		inventory.currentCapacity -= totalWeight;
+		await inventory.save();
+
+		// Delete the item
+		await item.destroy();
+		console.log(`Item with ID ${itemId} deleted.`);
+
+		return { message: `Item with ID ${itemId} deleted.` };
+	} catch (error) {
+		console.error(`Error deleting item with ID ${itemId}:`, error);
+		return null;
+	}
+}
+
 export const apiItem = {
 	addItem,
 	getAllItemsWithDetails,
 	getItemWithDetailsById,
 	transferItems,
+	deleteItemById,
 };

@@ -10,10 +10,10 @@ const StyledSelect = styled.select`
 	box-shadow: var(--shadow-sm);
 `;
 
-function SelectForm({ register, options }) {
+function SelectForm({ register, options, name }) {
 	return (
 		<StyledSelect
-			{...register('inventoryId', {
+			{...register(name, {
 				required: 'This field is required',
 			})}>
 			{options.map((option) => (

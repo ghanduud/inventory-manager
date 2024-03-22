@@ -2,6 +2,7 @@ import Row from '../components/Row';
 import Heading from '../components/Heading';
 import ItemTable from '../features/Iitems/ItemTable';
 import ItemOperations from '../features/Iitems/ItemOperations';
+import AddItem from '../features/Iitems/AddItem';
 
 function Items() {
 	return (
@@ -13,6 +14,7 @@ function Items() {
 
 			<Row>
 				<ItemTable />
+				<AddItem />
 			</Row>
 		</>
 	);
