@@ -7,6 +7,7 @@ import AppLayout from './components/AppLayout';
 import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
 import { Toaster } from 'react-hot-toast';
+import Inventories from './pages/Inventories';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -27,6 +28,7 @@ function App() {
 						<Route index element={<Navigate replace to='dashboard' />} />
 						<Route path='dashboard' element={<Dashboard />} />
 						<Route path='items' element={<Items />} />
+						<Route path='inventories' element={<Inventories />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

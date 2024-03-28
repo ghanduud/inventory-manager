@@ -20,7 +20,7 @@ export const Inventory = sequelize.define('Inventory', {
 	},
 });
 
-async function addInventory(location, maxCapacity = 999999999) {
+async function addInventory({ location, maxCapacity }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -101,8 +101,59 @@ async function getInventory(id) {
 	}
 }
 
+async function deleteInventory(id) {
+	try {
+		// Get the inventory with the specified ID
+		const inventoryToDelete = await Inventory.findByPk(id);
+
+		// Check if the inventory exists
+		if (!inventoryToDelete) {
+			return `Inventory with ID ${id} not found.`;
+		}
+
+		// Check if the current capacity is zero
+		if (inventoryToDelete.currentCapacity !== 0) {
+			return `Cannot delete inventory with ID ${id} because current capacity is not zero.`;
+		}
+
+		// Delete the inventory
+		await inventoryToDelete.destroy();
+
+		return `Inventory with ID ${id} deleted successfully.`;
+	} catch (error) {
+		console.error('Error deleting inventory:', error);
+		return 'An error occurred while deleting the inventory.';
+	}
+}
+
+async function updateInventory({ id, location, maxCapacity }) {
+	try {
+		// Get the inventory with the specified ID
+		const inventoryToEdit = await Inventory.findByPk(id);
+
+		// Check if the inventory exists
+		if (!inventoryToEdit) {
+			return `Inventory with ID ${id} not found.`;
+		}
+
+		// Update the inventory properties
+		inventoryToEdit.location = location;
+		inventoryToEdit.maxCapacity = maxCapacity;
+
+		// Save the changes to the database
+		await inventoryToEdit.save();
+
+		return `Inventory with ID ${id} updated successfully.`;
+	} catch (error) {
+		console.error('Error editing inventory:', error);
+		return 'An error occurred while editing the inventory.';
+	}
+}
+
 export const apiInventory = {
 	addInventory,
 	getInventories,
 	getInventory,
+	deleteInventory,
+	updateInventory,
 };

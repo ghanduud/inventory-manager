@@ -1,6 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { HiOutlineHome, HiOutlineTableCells } from 'react-icons/hi2';
+import { HiOutlineBuildingOffice, HiOutlineHome, HiOutlineTableCells } from 'react-icons/hi2';
 
 const NavList = styled.ul`
 	display: flex;
@@ -61,6 +61,12 @@ function MainNav() {
 					<StyledNavLink to='/items'>
 						<HiOutlineTableCells />
 						<span>Items</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to='/inventories'>
+						<HiOutlineBuildingOffice />
+						<span>Inventories</span>
 					</StyledNavLink>
 				</li>
 			</NavList>

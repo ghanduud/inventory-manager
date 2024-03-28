@@ -69,8 +69,6 @@ function TransfareItemForm({ itemToTransferFrom, onCloseModal, totalItemWeight }
 					disabled={isTransfering}
 					{...register('amount', {
 						required: 'This field is required',
-						validate: (value) =>
-							Number(value) <= Number(itemToTransferFrom.numberOfPieces) || 'Not enough transferable items',
 					})}
 				/>
 			</FormRow>

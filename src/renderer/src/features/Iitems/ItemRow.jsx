@@ -77,7 +77,7 @@ function ItemRow({ item }) {
 
 						<Modal.Window name='delete'>
 							<ConfirmDelete
-								resourceName='cabins'
+								resourceName='items'
 								disabled={isDeleting}
 								onConfirm={() => deleteItem(itemId)}
 							/>
