@@ -30,8 +30,6 @@ async function addManufacture(name, phoneNumber, email) {
 			// If the table doesn't exist, create it
 			await Manufacture.sync();
 			// console.log('Manufacture table created.');
-		} else {
-			// console.log('Manufacture table already exists.');
 		}
 
 		// Add the provided manufacture to the table
@@ -40,9 +38,11 @@ async function addManufacture(name, phoneNumber, email) {
 			phoneNumber: phoneNumber,
 			email: email,
 		});
-		// console.log(`Manufacture ${name} added.`);
+
+		return { error: null };
 	} catch (error) {
 		// console.error('Error syncing Manufacture model:', error);
+		return { error: `Error adding manufacture` };
 	}
 }
 
@@ -55,7 +55,7 @@ async function getManufactures() {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Manufactures')) {
 			// console.log('Manufacture table does not exist.');
-			return [];
+			return { data: [], error: `Manufacture table dont excist` };
 		}
 
 		// Retrieve all manufactures from the table
@@ -69,10 +69,10 @@ async function getManufactures() {
 			email: manufacture.email,
 		}));
 
-		return manufacturesData;
+		return { data: manufacturesData, error: null };
 	} catch (error) {
 		// console.error('Error syncing Manufacture model:', error);
-		return [];
+		return { data: [], error: `Error getting manufacture` };
 	}
 }
 
@@ -85,7 +85,7 @@ async function getManufacture(id) {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Manufactures')) {
 			// console.log('Manufacture table does not exist.');
-			return null;
+			return { data: null, error: `Manufacture table dont excist` };
 		}
 
 		// Retrieve the manufacture with the specified ID
@@ -93,14 +93,14 @@ async function getManufacture(id) {
 
 		if (!manufacture) {
 			// console.log(`Manufacture with ID ${id} not found.`);
-			return null;
+			return { data: null, error: `Manufacture not found` };
 		}
 
 		// console.log('Manufacture:', manufacture);
-		return manufacture;
+		return { data: manufacture, error: null };
 	} catch (error) {
 		// console.error('Error syncing Manufacture model:', error);
-		return null;
+		return { data: null, error: `Error getting manufacture` };
 	}
 }
 

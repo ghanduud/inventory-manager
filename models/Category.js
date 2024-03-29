@@ -24,17 +24,18 @@ async function addCategory(name) {
 			// If the table doesn't exist, create it
 			await Category.sync();
 			// console.log('Category table created.');
-		} else {
-			// console.log('Category table already exists.');
 		}
 
 		// Add the provided Category to the table
 		await Category.create({
 			name: name,
 		});
+
+		return { error: null };
 		// console.log(`Category ${name} added.`);
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
+		return { error: `Error in creating category` };
 	}
 }
 
@@ -47,7 +48,7 @@ async function getCategories() {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Categories')) {
 			// console.log('Category table does not exist.');
-			return [];
+			return { data: [], error: null };
 		}
 
 		// Retrieve all Categories from the table with only the necessary attributes
@@ -59,10 +60,10 @@ async function getCategories() {
 		}));
 		// console.log('All Categories in the table:', allCategories);
 
-		return categoryData;
+		return { data: categoryData, error: null };
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
-		return [];
+		return { data: [], error: `Failed to get category` };
 	}
 }
 
@@ -75,7 +76,7 @@ async function getCategory(id) {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Categories')) {
 			// console.log('Category table does not exist.');
-			return null;
+			return { data: null, error: `Category does not excist` };
 		}
 
 		// Retrieve the Category with the specified ID
@@ -83,14 +84,14 @@ async function getCategory(id) {
 
 		if (!category) {
 			// console.log(`Category with ID ${id} not found.`);
-			return null;
+			return { data: null, error: `category does not excist` };
 		}
 
 		// console.log('Category:', Category);
-		return category;
+		return { data: category, error: null };
 	} catch (error) {
 		// console.error('Error syncing Category model:', error);
-		return null;
+		return { data: null, error: `Failed to get category` };
 	}
 }
 

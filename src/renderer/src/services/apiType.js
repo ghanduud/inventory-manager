@@ -1,4 +1,5 @@
 export async function getTypes() {
-	const data = window.apiType.getTypes();
+	const { data, error } = await window.apiType.getTypes();
+	if (error) throw new Error(error);
 	return data;
 }

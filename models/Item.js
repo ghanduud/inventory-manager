@@ -56,8 +56,8 @@ async function addItem({
 		const material = await Material.findByPk(materialId);
 
 		if (!category || !type || !size || !inventory || !manufacture || !material) {
-			console.error('Invalid Category, Type, Size, or Inventory ID');
-			return null;
+			// console.error('Invalid Category, Type, Size, or Inventory ID');
+			return { error: 'Invalid data' };
 		}
 
 		// Calculate the total weight of the new items
@@ -65,8 +65,7 @@ async function addItem({
 
 		// Check if adding the new items will exceed the maxCapacity of the inventory
 		if (inventory.currentCapacity + totalWeight > inventory.maxCapacity) {
-			console.error('Adding the new items will exceed the maxCapacity of the inventory');
-			return null;
+			return { error: `Adding the new items will exceed the maxCapacity of the inventory` };
 		}
 
 		// Check if an item with the same characteristics already exists
@@ -90,11 +89,11 @@ async function addItem({
 			inventory.currentCapacity += totalWeight;
 			await inventory.save();
 
-			return existingItem;
+			return { error: null };
 		}
 
 		// Create the Item record with associations
-		const newItem = await Item.create({
+		await Item.create({
 			weightPerPiece: weightOfItem,
 			pricePerKilo,
 			numberOfPieces: numberOfItems,
@@ -110,10 +109,9 @@ async function addItem({
 		inventory.currentCapacity += totalWeight;
 		await inventory.save();
 
-		return newItem;
+		return { error: null };
 	} catch (error) {
-		console.error('Error adding Item:', error);
-		return null;
+		return { error: `Error adding Item` };
 	}
 }
 
@@ -163,10 +161,9 @@ async function getAllItemsWithDetails() {
 			material: item.Material ? item.Material.name : null,
 		}));
 
-		return itemsWithDetails;
+		return { data: itemsWithDetails, error: null };
 	} catch (error) {
-		console.error('Error getting items with details:', error);
-		return null;
+		return { data: [], error: `Error getting items` };
 	}
 }
 
@@ -202,16 +199,10 @@ async function getItemWithDetailsById(itemId) {
 			],
 		});
 
-		if (item) {
-			console.log(`Item with ID ${itemId} and details:`, item.toJSON());
-		} else {
-			console.log(`Item with ID ${itemId} not found.`);
-		}
-
-		return item;
+		return { data: item, error: null };
 	} catch (error) {
-		console.error(`Error getting item with ID ${itemId} and details:`, error);
-		return null;
+		// console.error(`Error getting item with ID ${itemId} and details:`, error);
+		return { data: null, error: `Error getting item` };
 	}
 }
 
@@ -225,16 +216,14 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 		});
 
 		if (!itemToTransfer) {
-			console.error(`Item with ID ${itemId} not found.`);
-			return null;
+			return { error: `Item not found` };
 		}
 
 		// Check if the destination inventory exists
 		const destinationInventory = await Inventory.findByPk(destinationInventoryId);
 
 		if (!destinationInventory) {
-			console.error(`Inventory with ID ${destinationInventoryId} not found.`);
-			return null;
+			return { error: `Inventory not found` };
 		}
 
 		// Calculate the total weight of the items to be transferred
@@ -242,8 +231,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 
 		// Check if the destination inventory has enough capacity
 		if (destinationInventory.maxCapacity && totalWeight > destinationInventory.maxCapacity) {
-			console.error(`Not enough capacity in the destination inventory for the items.`);
-			return null;
+			return { error: `No Enough capacity in the distenation inventory` };
 		}
 
 		// Find or create the destination item
@@ -265,8 +253,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 
 		// Check if there's enough quantity to transfer
 		if (itemToTransfer.numberOfPieces < numberOfItems) {
-			console.error(`Not enough pieces to transfer for item with ID ${itemId}.`);
-			return null;
+			return { error: `No enough picese to transefare to ` };
 		}
 
 		// Update the destination item
@@ -279,7 +266,6 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 		// If the source item's numberOfPieces is zero, delete the item
 		if (itemToTransfer.numberOfPieces === 0) {
 			await itemToTransfer.destroy();
-			console.log(`Item ${itemId} deleted.`);
 		} else {
 			await itemToTransfer.save();
 		}
@@ -293,10 +279,9 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 		sourceInventory.currentCapacity -= totalWeight;
 		await sourceInventory.save();
 
-		return destinationItem;
+		return { error: null };
 	} catch (error) {
-		console.error('Error transferring items:', error);
-		return null;
+		return { error: `Error transfearing the item` };
 	}
 }
 
@@ -306,8 +291,7 @@ async function deleteItemById(itemId) {
 		const item = await Item.findByPk(itemId);
 
 		if (!item) {
-			console.error(`Item with ID ${itemId} not found.`);
-			return null;
+			return { error: `Item not found` };
 		}
 
 		// Get the associated inventory ID and weight per piece
@@ -321,7 +305,7 @@ async function deleteItemById(itemId) {
 
 		if (!inventory) {
 			console.error(`Inventory with ID ${InventoryId} not found.`);
-			return null;
+			return { error: `Inventory not found` };
 		}
 
 		// Update the current capacity of the inventory
@@ -330,12 +314,11 @@ async function deleteItemById(itemId) {
 
 		// Delete the item
 		await item.destroy();
-		console.log(`Item with ID ${itemId} deleted.`);
 
-		return { message: `Item with ID ${itemId} deleted.` };
+		return { error: null };
 	} catch (error) {
 		console.error(`Error deleting item with ID ${itemId}:`, error);
-		return null;
+		return { error: `Error deleting the item` };
 	}
 }
 

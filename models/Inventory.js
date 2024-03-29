@@ -40,8 +40,10 @@ async function addInventory({ location, maxCapacity }) {
 			currentCapacity: 0, // Set the default currentCapacity to zero
 		});
 		// console.log(`Inventory added: Location - ${location}, Max Capacity - ${maxCapacity}`);
+
+		return { error: null };
 	} catch (error) {
-		console.error('Error adding inventory:', error);
+		return { error: `error in adding inventory` };
 	}
 }
 
@@ -53,7 +55,7 @@ async function getInventories() {
 		// Check if the Inventory table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Inventories')) {
-			return [];
+			return { data: [], error: null };
 		}
 
 		// Retrieve all inventories from the table with only the necessary attributes
@@ -66,10 +68,9 @@ async function getInventories() {
 			maxCapacity: inventory.maxCapacity,
 			currentCapacity: inventory.currentCapacity,
 		}));
-		return inventoriesData;
+		return { data: inventoriesData, error: null };
 	} catch (error) {
-		console.error('Error getting inventories:', error);
-		return [];
+		return { data: [], error: `Error getting inventories:` };
 	}
 }
 
@@ -82,7 +83,8 @@ async function getInventory(id) {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Inventories')) {
 			// console.log('Inventory table does not exist.');
-			return null;
+			// return null;
+			return { data: null, error: `No inventory found` };
 		}
 
 		// Retrieve the Inventory with the specified ID
@@ -90,14 +92,13 @@ async function getInventory(id) {
 
 		if (!inventory) {
 			// console.log(`Inventory with ID ${id} not found.`);
-			return null;
+			return { data: null, error: `No inventory found` };
 		}
 
 		// console.log('Inventory:', inventory);
-		return inventory;
+		return { data: inventory, error: null };
 	} catch (error) {
-		console.error('Error getting inventory:', error);
-		return null;
+		return { data: null, error: `No inventory found` };
 	}
 }
 
@@ -108,21 +109,21 @@ async function deleteInventory(id) {
 
 		// Check if the inventory exists
 		if (!inventoryToDelete) {
-			return `Inventory with ID ${id} not found.`;
+			return { error: `Inventory with ID ${id} not found.` };
 		}
 
 		// Check if the current capacity is zero
 		if (inventoryToDelete.currentCapacity !== 0) {
-			return `Cannot delete inventory with ID ${id} because current capacity is not zero.`;
+			return { error: `Inventory is not empty to delete.` };
 		}
 
 		// Delete the inventory
 		await inventoryToDelete.destroy();
 
-		return `Inventory with ID ${id} deleted successfully.`;
+		return { error: null };
 	} catch (error) {
 		console.error('Error deleting inventory:', error);
-		return 'An error occurred while deleting the inventory.';
+		return { error: 'An error occurred while deleting the inventory.' };
 	}
 }
 
@@ -133,7 +134,7 @@ async function updateInventory({ id, location, maxCapacity }) {
 
 		// Check if the inventory exists
 		if (!inventoryToEdit) {
-			return `Inventory with ID ${id} not found.`;
+			return { error: `Inventory with ID ${id} not found.` };
 		}
 
 		// Update the inventory properties
@@ -143,10 +144,9 @@ async function updateInventory({ id, location, maxCapacity }) {
 		// Save the changes to the database
 		await inventoryToEdit.save();
 
-		return `Inventory with ID ${id} updated successfully.`;
+		return { error: null };
 	} catch (error) {
-		console.error('Error editing inventory:', error);
-		return 'An error occurred while editing the inventory.';
+		return { error: 'An error occurred while editing the inventory.' };
 	}
 }
 

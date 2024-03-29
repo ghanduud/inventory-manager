@@ -24,8 +24,6 @@ async function addType(name) {
 			// If the table doesn't exist, create it
 			await Type.sync();
 			// console.log('Type table created.');
-		} else {
-			// console.log('Type table already exists.');
 		}
 
 		// Add the provided Type to the table
@@ -33,8 +31,11 @@ async function addType(name) {
 			name: name,
 		});
 		// console.log(`Type ${name} added.`);
+
+		return { error: null };
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
+		return { error: `Error adding Type` };
 	}
 }
 
@@ -47,7 +48,7 @@ async function getTypes() {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Types')) {
 			// console.log('Type table does not exist.');
-			return [];
+			return { data: [], error: `Type does not exist` };
 		}
 
 		// Retrieve all Types from the table
@@ -59,10 +60,10 @@ async function getTypes() {
 			name: type.name,
 		}));
 
-		return typesData;
+		return { data: typesData, error: null };
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
-		return [];
+		return { data: [], error: `Error getting type` };
 	}
 }
 
@@ -75,7 +76,7 @@ async function getType(id) {
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Types')) {
 			// console.log('Type table does not exist.');
-			return null;
+			return { data: null, error: `Type does not exist` };
 		}
 
 		// Retrieve the Type with the specified ID
@@ -83,14 +84,14 @@ async function getType(id) {
 
 		if (!type) {
 			// console.log(`Type with ID ${id} not found.`);
-			return null;
+			return { data: null, error: `Type does not exist` };
 		}
 
 		// console.log('Type:', Type);
-		return type;
+		return { data: type, error: null };
 	} catch (error) {
 		// console.error('Error syncing Type model:', error);
-		return null;
+		return { data: null, error: `Error getting type` };
 	}
 }
 

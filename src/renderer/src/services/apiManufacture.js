@@ -1,5 +1,5 @@
 export async function getManufactures() {
-	const data = window.apiManufacture.getManufactures();
-
+	const { data, error } = await window.apiManufacture.getManufactures();
+	if (error) throw new Error(error);
 	return data;
 }
