@@ -37,7 +37,7 @@ function ItemTable() {
 
 	return (
 		<Menus>
-			<Table columns='0.8fr 0.8fr 0.8fr .5fr 1fr .8fr .8fr 1fr .8fr 0.8fr 0.1fr'>
+			<Table columns='0.8fr 0.8fr 1fr .5fr 1.2fr .9fr 1.2fr 1fr .8fr 0.8fr 0.1fr'>
 				<Table.Header>
 					<div>Category</div>
 					<div>Material</div>

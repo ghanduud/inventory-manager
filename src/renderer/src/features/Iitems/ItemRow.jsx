@@ -16,7 +16,7 @@ const Cell = styled.div`
 	font-family: sans-serif;
 	border-left: 1px solid var(--color-grey-200);
 	text-align: center;
-	font-size: 1.6rem;
+	font-size: 1.5rem;
 	font-weight: 500;
 	color: var(--color-grey-700);
 `;

@@ -8,7 +8,7 @@ export function useDeleteInventory() {
 	const { isLoading: isDeleting, mutate: deleteInventory } = useMutation({
 		mutationFn: apiDeleteInventory,
 		onSuccess: () => {
-			toast.success('Item successfully deleted');
+			toast.success('Inventory successfully deleted');
 
 			queryClient.invalidateQueries({ queryKey: ['inventories'] });
 		},

@@ -1,19 +1,6 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
+import { sequelize, Item, Type } from './sqlite';
 
-export const Type = sequelize.define('Type', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	name: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-});
-
-async function addType(name) {
+async function addType({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -67,7 +54,7 @@ async function getTypes() {
 	}
 }
 
-async function getType(id) {
+async function getType({ id }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -95,8 +82,52 @@ async function getType(id) {
 	}
 }
 
+async function deleteType({ id }) {
+	try {
+		await sequelize.sync();
+
+		const itemWithType = await Item.findOne({
+			where: {
+				TypeId: id,
+			},
+		});
+
+		if (itemWithType) return { error: `There are items with this type in the inventory` };
+
+		await Type.destroy({
+			where: {
+				id: id,
+			},
+		});
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Error deleting the type` };
+	}
+}
+
+async function updateType({ id, name }) {
+	try {
+		await sequelize.sync();
+
+		const typeToUpdate = Type.findByPk(id);
+
+		if (!typeToUpdate) return { error: `Can not find type to update` };
+
+		typeToUpdate.name = name;
+
+		await typeToUpdate.save();
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Type failed to update` };
+	}
+}
+
 export const apiType = {
 	addType,
 	getTypes,
 	getType,
+	deleteType,
+	updateType,
 };

@@ -1,25 +1,6 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
+import { Manufacture, sequelize, Item } from './sqlite';
 
-export const Manufacture = sequelize.define('Manufacture', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	name: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-	phoneNumber: {
-		type: DataTypes.STRING,
-	},
-	email: {
-		type: DataTypes.STRING,
-	},
-});
-
-async function addManufacture(name, phoneNumber, email) {
+async function addManufacture({ name, phoneNumber, email }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -76,7 +57,7 @@ async function getManufactures() {
 	}
 }
 
-async function getManufacture(id) {
+async function getManufacture({ id }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -104,8 +85,54 @@ async function getManufacture(id) {
 	}
 }
 
+async function deleteManufacture({ id }) {
+	try {
+		await sequelize.sync();
+
+		const itemWithManufacture = await Item.findOne({
+			where: {
+				ManufactureId: id,
+			},
+		});
+
+		if (itemWithManufacture) return { error: `There are items with this manufacture in the inventory` };
+
+		await Manufacture.destroy({
+			where: {
+				id: id,
+			},
+		});
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Error deleting the manufacture` };
+	}
+}
+
+async function updateManufacture({ id, name, email, phoneNumber }) {
+	try {
+		await sequelize.sync();
+
+		const manufactureToUpdate = Manufacture.findByPk(id);
+
+		if (!manufactureToUpdate) return { error: `Can not find manufacture to update` };
+
+		manufactureToUpdate.name = name;
+		manufactureToUpdate.email = email;
+		manufactureToUpdate.phoneNumber = phoneNumber;
+
+		await manufactureToUpdate.save();
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Manufacture failed to update` };
+	}
+}
+
 export const apiManufacture = {
 	addManufacture,
 	getManufactures,
 	getManufacture,
+	deleteManufacture,
+	updateManufacture,
 };

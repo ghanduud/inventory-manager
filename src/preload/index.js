@@ -6,8 +6,8 @@ import { apiCategory } from '../../models/Category';
 import { apiType } from '../../models/Type';
 import { apiSize } from '../../models/Size';
 import { apiInventory } from '../../models/Inventory';
-import { apiItem } from '../../models/Item';
 import { apiMaterial } from '../../models/Material';
+import { apiItem } from '../../models/Item';
 
 const api = {};
 
@@ -19,8 +19,8 @@ if (process.contextIsolated) {
 		contextBridge.exposeInMainWorld('apiType', apiType);
 		contextBridge.exposeInMainWorld('apiSize', apiSize);
 		contextBridge.exposeInMainWorld('apiInventory', apiInventory);
-		contextBridge.exposeInMainWorld('apiItem', apiItem);
 		contextBridge.exposeInMainWorld('apiMaterial', apiMaterial);
+		contextBridge.exposeInMainWorld('apiItem', apiItem);
 		contextBridge.exposeInMainWorld('api', api);
 	} catch (error) {
 		console.error(error);

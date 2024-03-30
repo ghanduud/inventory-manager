@@ -1,37 +1,4 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
-import { Manufacture } from './Manufacture';
-import { Category } from './Category';
-import { Type } from './Type';
-import { Size } from './Size';
-import { Inventory } from './Inventory';
-import { Material } from './Material';
-
-export const Item = sequelize.define('Item', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	weightPerPiece: {
-		type: DataTypes.INTEGER,
-		allowNull: false,
-	},
-	pricePerKilo: {
-		type: DataTypes.INTEGER,
-		allowNull: false,
-	},
-	numberOfPieces: {
-		type: DataTypes.INTEGER,
-	},
-});
-
-Item.belongsTo(Manufacture);
-Item.belongsTo(Category);
-Item.belongsTo(Type);
-Item.belongsTo(Size);
-Item.belongsTo(Inventory);
-Item.belongsTo(Material);
+import { Item, sequelize, Manufacture, Category, Type, Size, Inventory, Material } from './sqlite';
 
 async function addItem({
 	categoryId,
@@ -47,6 +14,7 @@ async function addItem({
 	const numberOfItems = Number(numberOfPieces);
 	const weightOfItem = Number(weightPerPiece);
 	try {
+		await sequelize.sync();
 		// Find associated Category, Type, Size, and Inventory records
 		const category = await Category.findByPk(categoryId);
 		const type = await Type.findByPk(typeId);
@@ -117,6 +85,7 @@ async function addItem({
 
 async function getAllItemsWithDetails() {
 	try {
+		await sequelize.sync();
 		// Use Sequelize query with associations and includes
 		const items = await Item.findAll({
 			include: [
@@ -169,6 +138,7 @@ async function getAllItemsWithDetails() {
 
 async function getItemWithDetailsById(itemId) {
 	try {
+		await sequelize.sync();
 		// Use Sequelize query with associations and includes
 		const item = await Item.findByPk(itemId, {
 			include: [
@@ -210,6 +180,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 	const numberOfItems = Number(numberOfPieces);
 
 	try {
+		await sequelize.sync();
 		// Find the item to be transferred
 		const itemToTransfer = await Item.findByPk(itemId, {
 			include: [Manufacture, Category, Type, Size, Inventory],
@@ -287,6 +258,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 
 async function deleteItemById(itemId) {
 	try {
+		await sequelize.sync();
 		// Find the item by its ID
 		const item = await Item.findByPk(itemId);
 

@@ -1,19 +1,6 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
+import { Size, sequelize, Item } from './sqlite';
 
-export const Size = sequelize.define('Size', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	name: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-});
-
-async function addSize(name) {
+async function addSize({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -66,7 +53,7 @@ async function getSizes() {
 	}
 }
 
-async function getSize(id) {
+async function getSize({ id }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -94,8 +81,52 @@ async function getSize(id) {
 	}
 }
 
+async function deleteSize({ id }) {
+	try {
+		await sequelize.sync();
+
+		const itemWithSize = await Item.findOne({
+			where: {
+				SizeId: id,
+			},
+		});
+
+		if (itemWithSize) return { error: `There are items with this size in the inventory` };
+
+		await Size.destroy({
+			where: {
+				id: id,
+			},
+		});
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Error deleting the size` };
+	}
+}
+
+async function updateSize({ id, name }) {
+	try {
+		await sequelize.sync();
+
+		const sizeToUpdate = Size.findByPk(id);
+
+		if (!sizeToUpdate) return { error: `Can not find size to update` };
+
+		sizeToUpdate.name = name;
+
+		await sizeToUpdate.save();
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Size failed to update` };
+	}
+}
+
 export const apiSize = {
 	addSize,
 	getSizes,
 	getSize,
+	deleteSize,
+	updateSize,
 };

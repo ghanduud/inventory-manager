@@ -1,19 +1,6 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
+import { Material, sequelize, Item } from './sqlite';
 
-export const Material = sequelize.define('Material', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	name: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-});
-
-async function addMaterial(name) {
+async function addMaterial({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -66,7 +53,7 @@ async function getMaterials() {
 	}
 }
 
-async function getMaterial(id) {
+async function getMaterial({ id }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -94,8 +81,52 @@ async function getMaterial(id) {
 	}
 }
 
+async function deleteMaterial({ id }) {
+	try {
+		await sequelize.sync();
+
+		const itemWithMaterial = await Item.findOne({
+			where: {
+				MaterialId: id,
+			},
+		});
+
+		if (itemWithMaterial) return { error: `There are items with this material in the inventory` };
+
+		await Material.destroy({
+			where: {
+				id: id,
+			},
+		});
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Error deleting the material` };
+	}
+}
+
+async function updateMaterial({ id, name }) {
+	try {
+		await sequelize.sync();
+
+		const materialToUpdate = Material.findByPk(id);
+
+		if (!materialToUpdate) return { error: `Can not find material to update` };
+
+		materialToUpdate.name = name;
+
+		await materialToUpdate.save();
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Material failed to update` };
+	}
+}
+
 export const apiMaterial = {
 	addMaterial,
 	getMaterials,
 	getMaterial,
+	deleteMaterial,
+	updateMaterial,
 };

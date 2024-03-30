@@ -1,24 +1,4 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
-
-export const Inventory = sequelize.define('Inventory', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	location: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-	maxCapacity: {
-		type: DataTypes.INTEGER,
-	},
-	currentCapacity: {
-		type: DataTypes.INTEGER,
-		defaultValue: 0,
-	},
-});
+import { Inventory, sequelize } from './sqlite';
 
 async function addInventory({ location, maxCapacity }) {
 	try {
@@ -55,7 +35,7 @@ async function getInventories() {
 		// Check if the Inventory table exists
 		const tableExists = await sequelize.getQueryInterface().showAllTables();
 		if (!tableExists.includes('Inventories')) {
-			return { data: [], error: null };
+			return { data: [], error: 'No Inventories found' };
 		}
 
 		// Retrieve all inventories from the table with only the necessary attributes
@@ -74,7 +54,7 @@ async function getInventories() {
 	}
 }
 
-async function getInventory(id) {
+async function getInventory({ id }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -102,8 +82,9 @@ async function getInventory(id) {
 	}
 }
 
-async function deleteInventory(id) {
+async function deleteInventory({ id }) {
 	try {
+		await sequelize.sync();
 		// Get the inventory with the specified ID
 		const inventoryToDelete = await Inventory.findByPk(id);
 
@@ -129,6 +110,7 @@ async function deleteInventory(id) {
 
 async function updateInventory({ id, location, maxCapacity }) {
 	try {
+		await sequelize.sync();
 		// Get the inventory with the specified ID
 		const inventoryToEdit = await Inventory.findByPk(id);
 

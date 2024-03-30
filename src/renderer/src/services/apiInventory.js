@@ -4,10 +4,9 @@ export async function getInventories() {
 	return data;
 }
 
-export async function deleteInventory(id) {
-	const { message, error } = await window.apiInventory.deleteInventory(id);
+export async function deleteInventory(inventoryToDelete) {
+	const { error } = await window.apiInventory.deleteInventory(inventoryToDelete);
 	if (error) throw new Error(error);
-	return message;
 }
 
 export async function createInventory(newInventory) {

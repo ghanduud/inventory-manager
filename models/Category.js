@@ -1,19 +1,6 @@
-import { DataTypes } from 'sequelize';
-import { sequelize } from './sqlite';
+import { sequelize, Category, Item } from './sqlite';
 
-export const Category = sequelize.define('Category', {
-	id: {
-		type: DataTypes.INTEGER,
-		primaryKey: true,
-		autoIncrement: true,
-	},
-	name: {
-		type: DataTypes.STRING,
-		allowNull: false,
-	},
-});
-
-async function addCategory(name) {
+async function addCategory({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -67,7 +54,7 @@ async function getCategories() {
 	}
 }
 
-async function getCategory(id) {
+async function getCategory({ id }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -95,8 +82,54 @@ async function getCategory(id) {
 	}
 }
 
+async function deleteCategory({ id }) {
+	try {
+		await sequelize.sync();
+		// Check if there are any items associated with the given category ID
+		const itemsWithCategory = await Item.findOne({
+			where: {
+				CategoryId: id,
+			},
+		});
+
+		if (itemsWithCategory) return { error: 'There are items with this category in the inventory' };
+
+		// If there are no items associated, proceed with deleting the category
+		await Category.destroy({
+			where: {
+				id: id,
+			},
+		});
+
+		return { error: null };
+	} catch (error) {
+		console.error('Error deleting category:', error);
+		return { error: 'Error deleting category.' };
+	}
+}
+
+async function updateCategory({ id, name }) {
+	try {
+		await sequelize.sync();
+
+		const categoryToUpdate = Category.findByPk(id);
+
+		if (!categoryToUpdate) return { error: `Can not find category to update` };
+
+		categoryToUpdate.name = name;
+
+		await categoryToUpdate.save();
+
+		return { error: null };
+	} catch (error) {
+		return { error: `Category failed to update` };
+	}
+}
+
 export const apiCategory = {
 	addCategory,
 	getCategories,
 	getCategory,
+	deleteCategory,
+	updateCategory,
 };

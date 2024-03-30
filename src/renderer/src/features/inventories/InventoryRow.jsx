@@ -59,7 +59,7 @@ function InventoryRow({ inventory }) {
 							<ConfirmDelete
 								resourceName='inventory'
 								disabled={isDeleting}
-								onConfirm={() => deleteInventory(inventoryId)}
+								onConfirm={() => deleteInventory({ id: inventoryId })}
 							/>
 						</Modal.Window>
 					</Menus.Menu>
