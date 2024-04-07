@@ -1,6 +1,6 @@
 import { Manufacture, sequelize, Item } from './sqlite';
 
-async function addManufacture({ name, phoneNumber, email }) {
+async function createManufacture({ name, phoneNumber, email }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -113,7 +113,7 @@ async function updateManufacture({ id, name, email, phoneNumber }) {
 	try {
 		await sequelize.sync();
 
-		const manufactureToUpdate = Manufacture.findByPk(id);
+		const manufactureToUpdate = await Manufacture.findByPk(id);
 
 		if (!manufactureToUpdate) return { error: `Can not find manufacture to update` };
 
@@ -125,12 +125,13 @@ async function updateManufacture({ id, name, email, phoneNumber }) {
 
 		return { error: null };
 	} catch (error) {
-		return { error: `Manufacture failed to update` };
+		console.log(error);
+		return { error };
 	}
 }
 
 export const apiManufacture = {
-	addManufacture,
+	createManufacture,
 	getManufactures,
 	getManufacture,
 	deleteManufacture,

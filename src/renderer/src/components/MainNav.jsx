@@ -1,6 +1,11 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 import { HiOutlineBuildingOffice, HiOutlineHome, HiOutlineTableCells } from 'react-icons/hi2';
+import { LuFactory } from 'react-icons/lu';
+import { GiMaterialsScience } from 'react-icons/gi';
+import { BiCategoryAlt } from 'react-icons/bi';
+import { IoMdResize } from 'react-icons/io';
+import { FiType } from 'react-icons/fi';
 
 const NavList = styled.ul`
 	display: flex;
@@ -64,9 +69,39 @@ function MainNav() {
 					</StyledNavLink>
 				</li>
 				<li>
+					<StyledNavLink to='/categories'>
+						<BiCategoryAlt />
+						<span>Categories</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to='/sizes'>
+						<IoMdResize />
+						<span>Sizes</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to='/types'>
+						<FiType />
+						<span>Types</span>
+					</StyledNavLink>
+				</li>
+				<li>
 					<StyledNavLink to='/inventories'>
 						<HiOutlineBuildingOffice />
 						<span>Inventories</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to='/manufactures'>
+						<LuFactory />
+						<span>Manufactures</span>
+					</StyledNavLink>
+				</li>
+				<li>
+					<StyledNavLink to='/materials'>
+						<GiMaterialsScience />
+						<span>Materials</span>
 					</StyledNavLink>
 				</li>
 			</NavList>

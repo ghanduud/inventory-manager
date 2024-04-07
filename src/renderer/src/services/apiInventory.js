@@ -10,7 +10,7 @@ export async function deleteInventory(inventoryToDelete) {
 }
 
 export async function createInventory(newInventory) {
-	const { error } = await window.apiInventory.addInventory(newInventory);
+	const { error } = await window.apiInventory.createInventory(newInventory);
 	if (error) throw new Error(error);
 }
 

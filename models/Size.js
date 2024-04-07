@@ -1,6 +1,6 @@
 import { Size, sequelize, Item } from './sqlite';
 
-async function addSize({ name }) {
+async function createSize({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -109,7 +109,7 @@ async function updateSize({ id, name }) {
 	try {
 		await sequelize.sync();
 
-		const sizeToUpdate = Size.findByPk(id);
+		const sizeToUpdate = await Size.findByPk(id);
 
 		if (!sizeToUpdate) return { error: `Can not find size to update` };
 
@@ -124,7 +124,7 @@ async function updateSize({ id, name }) {
 }
 
 export const apiSize = {
-	addSize,
+	createSize,
 	getSizes,
 	getSize,
 	deleteSize,

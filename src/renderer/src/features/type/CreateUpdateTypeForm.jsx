@@ -1,18 +1,20 @@
 import { useForm } from 'react-hook-form';
-import { useCreateInventory } from './useCreateInventory';
-import { useUpdateInventory } from './useUpdateInventory';
+
+import { useCreateType } from './useCreateType';
+import { useUpdateType } from './useUpdateType';
+
 import Form from '../../components/Form';
 import FormRow from '../../components/FormRow';
 import Input from '../../components/Input';
 import Button from '../../components/Button';
 
-function CreateUpdateInventoryForm({ inventoryToUpdate = {}, onCloseModal }) {
-	const { isCreating, createInventory } = useCreateInventory();
-	const { isUpdateing, updateInventory } = useUpdateInventory();
+function CreateUpdateTypeForm({ typeToUpdate = {}, onCloseModal }) {
+	const { isCreating, createType } = useCreateType();
+	const { isUpdateing, updateType } = useUpdateType();
 
 	const isWorking = isCreating || isUpdateing;
 
-	const { id: updateId, ...updateValues } = inventoryToUpdate;
+	const { id: updateId, ...updateValues } = typeToUpdate;
 	const isUpdatingSession = Boolean(updateId);
 
 	const { register, handleSubmit, reset, formState } = useForm({
@@ -22,10 +24,8 @@ function CreateUpdateInventoryForm({ inventoryToUpdate = {}, onCloseModal }) {
 	const { errors } = formState;
 
 	function onSubmit(data) {
-		if (data.maxCapacity === '') data.maxCapacity = 100000000;
-
 		if (isUpdatingSession) {
-			updateInventory(
+			updateType(
 				{ ...data, id: updateId },
 				{
 					onSuccess: () => {
@@ -35,7 +35,7 @@ function CreateUpdateInventoryForm({ inventoryToUpdate = {}, onCloseModal }) {
 				}
 			);
 		} else {
-			createInventory(data, {
+			createType(data, {
 				onSuccess: () => {
 					reset();
 					onCloseModal?.();
@@ -50,27 +50,24 @@ function CreateUpdateInventoryForm({ inventoryToUpdate = {}, onCloseModal }) {
 
 	return (
 		<Form onSubmit={handleSubmit(onSubmit, onError)} type={onCloseModal ? 'Modal' : 'reguler'}>
-			<FormRow label='Location' error={errors?.location?.message}>
+			<FormRow label='Type Name' error={errors?.name?.message}>
 				<Input
 					type='text'
-					id='location'
+					id='name'
 					disabled={isWorking}
-					{...register('location', {
+					{...register('name', {
 						required: 'This field is required',
 					})}
 				/>
-			</FormRow>
-			<FormRow label='Max Capacity' error={errors?.maxCapacity?.message}>
-				<Input type='number' id='maxCapacity' disabled={isWorking} {...register('maxCapacity')} />
 			</FormRow>
 			<FormRow>
 				<Button variation='secondary' type='reset' onClick={() => onCloseModal?.()}>
 					Cancel
 				</Button>
-				<Button disabled={isWorking}>{isUpdatingSession ? 'Update Inventory' : 'Create new Invetory'}</Button>
+				<Button disabled={isWorking}>{isUpdatingSession ? 'Update Type' : 'Create new Type'}</Button>
 			</FormRow>
 		</Form>
 	);
 }
 
-export default CreateUpdateInventoryForm;
+export default CreateUpdateTypeForm;

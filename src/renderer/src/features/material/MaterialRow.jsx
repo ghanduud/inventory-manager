@@ -3,10 +3,10 @@ import Table from '../../components/Table';
 import Modal from '../../components/Modal';
 import Menus from '../../components/Menus';
 import ConfirmDelete from '../../components/ConfirmDelete';
+import CreateUpdateMaterialForm from './CreateUpdateMaterialForm';
 
 import { HiPencil, HiTrash } from 'react-icons/hi2';
-import { useDeleteInventory } from './useDeleteInventory';
-import CreateUpdateInventoryForm from './CreateUpdateInventoryForm';
+import { useDeleteMaterial } from './useDeleteMaterial';
 
 const Cell = styled.div`
 	padding: 1.3rem 2.4rem;
@@ -22,25 +22,20 @@ const Toggle = styled.div`
 	margin-right: 1rem;
 `;
 
-function InventoryRow({ inventory }) {
-	const { isDeleting, deleteInventory } = useDeleteInventory();
+function MaterialRow({ material }) {
+	const { isDeleting, deleteMaterial } = useDeleteMaterial();
 
-	const { id: inventoryId, location, maxCapacity, currentCapacity } = inventory;
-
-	const percent = ((currentCapacity * 100) / maxCapacity).toFixed(2);
+	const { id: materialId, name } = material;
 
 	return (
 		<Table.Row>
-			<Cell>{location}</Cell>
-			<Cell>{currentCapacity}</Cell>
-			<Cell>{maxCapacity}</Cell>
-			<Cell>{percent}%</Cell>
+			<Cell>{name}</Cell>
 			<Toggle>
 				<Modal>
 					<Menus.Menu>
-						<Menus.Toggle id={inventoryId} />
+						<Menus.Toggle id={materialId} />
 
-						<Menus.List id={inventoryId}>
+						<Menus.List id={materialId}>
 							<Modal.Open opens='Update'>
 								<Menus.Button icon={<HiPencil />}>Update</Menus.Button>
 							</Modal.Open>
@@ -52,14 +47,14 @@ function InventoryRow({ inventory }) {
 						</Menus.List>
 
 						<Modal.Window name='Update'>
-							<CreateUpdateInventoryForm inventoryToUpdate={inventory} />
+							<CreateUpdateMaterialForm materialToUpdate={material} />
 						</Modal.Window>
 
 						<Modal.Window name='delete'>
 							<ConfirmDelete
-								resourceName='inventory'
+								resourceName='Material'
 								disabled={isDeleting}
-								onConfirm={() => deleteInventory({ id: inventoryId })}
+								onConfirm={() => deleteMaterial({ id: materialId })}
 							/>
 						</Modal.Window>
 					</Menus.Menu>
@@ -69,4 +64,4 @@ function InventoryRow({ inventory }) {
 	);
 }
 
-export default InventoryRow;
+export default MaterialRow;

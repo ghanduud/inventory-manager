@@ -1,6 +1,6 @@
 import { Inventory, sequelize } from './sqlite';
 
-async function addInventory({ location, maxCapacity }) {
+async function createInventory({ location, maxCapacity }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -133,7 +133,7 @@ async function updateInventory({ id, location, maxCapacity }) {
 }
 
 export const apiInventory = {
-	addInventory,
+	createInventory,
 	getInventories,
 	getInventory,
 	deleteInventory,

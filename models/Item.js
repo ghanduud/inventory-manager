@@ -1,6 +1,6 @@
 import { Item, sequelize, Manufacture, Category, Type, Size, Inventory, Material } from './sqlite';
 
-async function addItem({
+async function createItem({
 	categoryId,
 	typeId,
 	sizeId,
@@ -136,11 +136,11 @@ async function getAllItemsWithDetails() {
 	}
 }
 
-async function getItemWithDetailsById(itemId) {
+async function getItemWithDetailsById({ id }) {
 	try {
 		await sequelize.sync();
 		// Use Sequelize query with associations and includes
-		const item = await Item.findByPk(itemId, {
+		const item = await Item.findByPk(id, {
 			include: [
 				{
 					model: Manufacture,
@@ -176,24 +176,28 @@ async function getItemWithDetailsById(itemId) {
 	}
 }
 
-async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
-	const numberOfItems = Number(numberOfPieces);
+async function transferItems({ id, amount, inventoryId }) {
+	console.log(id, amount, inventoryId);
+	const numberOfItems = Number(amount);
 
 	try {
 		await sequelize.sync();
 		// Find the item to be transferred
-		const itemToTransfer = await Item.findByPk(itemId, {
+		const itemToTransfer = await Item.findByPk(id, {
 			include: [Manufacture, Category, Type, Size, Inventory],
 		});
 
 		if (!itemToTransfer) {
+			console.log(`Item not found`);
 			return { error: `Item not found` };
 		}
 
 		// Check if the destination inventory exists
-		const destinationInventory = await Inventory.findByPk(destinationInventoryId);
+		const destinationInventory = await Inventory.findByPk(inventoryId);
+		console.log(destinationInventory);
 
 		if (!destinationInventory) {
+			console.log(`Inventory not found`);
 			return { error: `Inventory not found` };
 		}
 
@@ -202,6 +206,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 
 		// Check if the destination inventory has enough capacity
 		if (destinationInventory.maxCapacity && totalWeight > destinationInventory.maxCapacity) {
+			console.log(`No Enough capacity in the distenation inventory`);
 			return { error: `No Enough capacity in the distenation inventory` };
 		}
 
@@ -213,7 +218,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 				SizeId: itemToTransfer.SizeId,
 				ManufactureId: itemToTransfer.ManufactureId,
 				MaterialId: itemToTransfer.ManufactureId,
-				InventoryId: destinationInventoryId,
+				InventoryId: inventoryId,
 			},
 			defaults: {
 				weightPerPiece: itemToTransfer.weightPerPiece,
@@ -224,6 +229,7 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 
 		// Check if there's enough quantity to transfer
 		if (itemToTransfer.numberOfPieces < numberOfItems) {
+			console.log(`No enough picese to transefare to`);
 			return { error: `No enough picese to transefare to ` };
 		}
 
@@ -252,15 +258,16 @@ async function transferItems(itemId, numberOfPieces, destinationInventoryId) {
 
 		return { error: null };
 	} catch (error) {
+		console.log(`Error transfearing the item`);
 		return { error: `Error transfearing the item` };
 	}
 }
 
-async function deleteItemById(itemId) {
+async function deleteItemById({ id }) {
 	try {
 		await sequelize.sync();
 		// Find the item by its ID
-		const item = await Item.findByPk(itemId);
+		const item = await Item.findByPk(id);
 
 		if (!item) {
 			return { error: `Item not found` };
@@ -289,15 +296,30 @@ async function deleteItemById(itemId) {
 
 		return { error: null };
 	} catch (error) {
-		console.error(`Error deleting item with ID ${itemId}:`, error);
 		return { error: `Error deleting the item` };
 	}
 }
 
+async function updatePrice({ id, pricePerKilo }) {
+	try {
+		await sequelize.sync();
+		const item = await Item.findByPk(id);
+		if (!item) return { error: `Can not find item to update price` };
+
+		item.pricePerKilo = pricePerKilo;
+
+		await item.save();
+		return { error: null };
+	} catch (error) {
+		return { error: 'Price did not update' };
+	}
+}
+
 export const apiItem = {
-	addItem,
+	createItem,
 	getAllItemsWithDetails,
 	getItemWithDetailsById,
 	transferItems,
 	deleteItemById,
+	updatePrice,
 };

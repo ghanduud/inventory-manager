@@ -4,17 +4,22 @@ export async function getItems() {
 	return data;
 }
 
-export async function transfareItems({ id, amount, inventoryId }) {
-	const { error } = await window.apiItem.transferItems(id, amount, inventoryId);
+export async function transfareItems(ItemsToTransfare) {
+	const { error } = await window.apiItem.transferItems(ItemsToTransfare);
 	if (error) throw new Error(error);
 }
 
-export async function deleteItem(id) {
-	const { error } = await window.apiItem.deleteItemById(id);
+export async function deleteItem(itemToDelete) {
+	const { error } = await window.apiItem.deleteItemById(itemToDelete);
 	if (error) throw new Error(error);
 }
 
 export async function createItem(newItem) {
-	const { error } = await window.apiItem.addItem(newItem);
+	const { error } = await window.apiItem.createItem(newItem);
+	if (error) throw new Error(error);
+}
+
+export async function updatePrice(itemToUpdate) {
+	const { error } = await window.apiItem.updatePrice(itemToUpdate);
 	if (error) throw new Error(error);
 }

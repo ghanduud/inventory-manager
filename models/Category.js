@@ -1,6 +1,6 @@
 import { sequelize, Category, Item } from './sqlite';
 
-async function addCategory({ name }) {
+async function createCategory({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -112,7 +112,7 @@ async function updateCategory({ id, name }) {
 	try {
 		await sequelize.sync();
 
-		const categoryToUpdate = Category.findByPk(id);
+		const categoryToUpdate = await Category.findByPk(id);
 
 		if (!categoryToUpdate) return { error: `Can not find category to update` };
 
@@ -127,7 +127,7 @@ async function updateCategory({ id, name }) {
 }
 
 export const apiCategory = {
-	addCategory,
+	createCategory,
 	getCategories,
 	getCategory,
 	deleteCategory,

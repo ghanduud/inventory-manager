@@ -6,17 +6,18 @@ import Table from '../../components/Table';
 import Menus from '../../components/Menus';
 import Modal from '../../components/Modal';
 import TransfareItemForm from './TransfareItemForm';
-import { HiTrash } from 'react-icons/hi2';
+import { HiPencil, HiTrash } from 'react-icons/hi2';
 import { useDeleteItem } from './useDeleteItem';
 
 import ConfirmDelete from '../../components/ConfirmDelete';
+import UpdatePriceForm from './UpdatePriceForm';
 
 const Cell = styled.div`
-	padding: 1.3rem 2.4rem;
+	padding: 1.3rem 2rem;
 	font-family: sans-serif;
 	border-left: 1px solid var(--color-grey-200);
 	text-align: center;
-	font-size: 1.5rem;
+	font-size: 1.4rem;
 	font-weight: 500;
 	color: var(--color-grey-700);
 `;
@@ -42,6 +43,7 @@ function ItemRow({ item }) {
 	} = item;
 
 	const totalWeight = numberOfPieces * weightPerPiece;
+	const totalPrice = totalWeight * pricePerKilo;
 
 	return (
 		<Table.Row>
@@ -54,6 +56,7 @@ function ItemRow({ item }) {
 			<Cell>{weightPerPiece}</Cell>
 			<Cell>{numberOfPieces}</Cell>
 			<Cell>{totalWeight}</Cell>
+			<Cell>{totalPrice}</Cell>
 			<Cell>{inventoryLocation}</Cell>
 			<Toggle>
 				<Modal>
@@ -63,6 +66,9 @@ function ItemRow({ item }) {
 						<Menus.List id={itemId}>
 							<Modal.Open opens='transfare'>
 								<Menus.Button icon={<TbTransform />}>Transefare</Menus.Button>
+							</Modal.Open>
+							<Modal.Open opens='updatePrice'>
+								<Menus.Button icon={<HiPencil />}>Update Price</Menus.Button>
 							</Modal.Open>
 							<Modal.Open opens='delete'>
 								<Menus.Button menutype='delete' icon={<HiTrash />}>
@@ -79,8 +85,11 @@ function ItemRow({ item }) {
 							<ConfirmDelete
 								resourceName='items'
 								disabled={isDeleting}
-								onConfirm={() => deleteItem(itemId)}
+								onConfirm={() => deleteItem({ id: itemId })}
 							/>
+						</Modal.Window>
+						<Modal.Window name='updatePrice'>
+							<UpdatePriceForm itemPriceToUpdate={item} />
 						</Modal.Window>
 					</Menus.Menu>
 				</Modal>

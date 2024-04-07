@@ -1,6 +1,6 @@
 import { sequelize, Item, Type } from './sqlite';
 
-async function addType({ name }) {
+async function createType({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -110,7 +110,7 @@ async function updateType({ id, name }) {
 	try {
 		await sequelize.sync();
 
-		const typeToUpdate = Type.findByPk(id);
+		const typeToUpdate = await Type.findByPk(id);
 
 		if (!typeToUpdate) return { error: `Can not find type to update` };
 
@@ -125,7 +125,7 @@ async function updateType({ id, name }) {
 }
 
 export const apiType = {
-	addType,
+	createType,
 	getTypes,
 	getType,
 	deleteType,

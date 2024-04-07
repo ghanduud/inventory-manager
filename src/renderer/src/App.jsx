@@ -8,6 +8,11 @@ import Dashboard from './pages/Dashboard';
 import Items from './pages/Items';
 import { Toaster } from 'react-hot-toast';
 import Inventories from './pages/Inventories';
+import Manufactures from './pages/Manufactures';
+import Materials from './pages/Materials';
+import Categories from './pages/Categories';
+import Sizes from './pages/Sizes';
+import Types from './pages/Types';
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -28,7 +33,12 @@ function App() {
 						<Route index element={<Navigate replace to='dashboard' />} />
 						<Route path='dashboard' element={<Dashboard />} />
 						<Route path='items' element={<Items />} />
+						<Route path='categories' element={<Categories />} />
+						<Route path='sizes' element={<Sizes />} />
+						<Route path='types' element={<Types />} />
 						<Route path='inventories' element={<Inventories />} />
+						<Route path='manufactures' element={<Manufactures />} />
+						<Route path='materials' element={<Materials />} />
 					</Route>
 				</Routes>
 			</BrowserRouter>

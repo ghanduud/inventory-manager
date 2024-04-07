@@ -1,6 +1,6 @@
 import { Material, sequelize, Item } from './sqlite';
 
-async function addMaterial({ name }) {
+async function createMaterial({ name }) {
 	try {
 		// Synchronize the model with the database
 		await sequelize.sync();
@@ -109,7 +109,7 @@ async function updateMaterial({ id, name }) {
 	try {
 		await sequelize.sync();
 
-		const materialToUpdate = Material.findByPk(id);
+		const materialToUpdate = await Material.findByPk(id);
 
 		if (!materialToUpdate) return { error: `Can not find material to update` };
 
@@ -124,7 +124,7 @@ async function updateMaterial({ id, name }) {
 }
 
 export const apiMaterial = {
-	addMaterial,
+	createMaterial,
 	getMaterials,
 	getMaterial,
 	deleteMaterial,

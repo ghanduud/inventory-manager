@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 
 import { createSize as apiCreateSize } from '../../services/apiSize';
 
-export function udeCreateSize() {
+export function useCreateSize() {
 	const queryClient = useQueryClient();
 
 	const { mutate: createSize, isLoading: isCreating } = useMutation({
