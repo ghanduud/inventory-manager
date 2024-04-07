@@ -177,7 +177,6 @@ async function getItemWithDetailsById({ id }) {
 }
 
 async function transferItems({ id, amount, inventoryId }) {
-	console.log(id, amount, inventoryId);
 	const numberOfItems = Number(amount);
 
 	try {
@@ -188,16 +187,13 @@ async function transferItems({ id, amount, inventoryId }) {
 		});
 
 		if (!itemToTransfer) {
-			console.log(`Item not found`);
 			return { error: `Item not found` };
 		}
 
 		// Check if the destination inventory exists
 		const destinationInventory = await Inventory.findByPk(inventoryId);
-		console.log(destinationInventory);
 
 		if (!destinationInventory) {
-			console.log(`Inventory not found`);
 			return { error: `Inventory not found` };
 		}
 
@@ -206,7 +202,6 @@ async function transferItems({ id, amount, inventoryId }) {
 
 		// Check if the destination inventory has enough capacity
 		if (destinationInventory.maxCapacity && totalWeight > destinationInventory.maxCapacity) {
-			console.log(`No Enough capacity in the distenation inventory`);
 			return { error: `No Enough capacity in the distenation inventory` };
 		}
 
@@ -217,7 +212,7 @@ async function transferItems({ id, amount, inventoryId }) {
 				TypeId: itemToTransfer.TypeId,
 				SizeId: itemToTransfer.SizeId,
 				ManufactureId: itemToTransfer.ManufactureId,
-				MaterialId: itemToTransfer.ManufactureId,
+				MaterialId: itemToTransfer.MaterialId,
 				InventoryId: inventoryId,
 			},
 			defaults: {
@@ -229,7 +224,6 @@ async function transferItems({ id, amount, inventoryId }) {
 
 		// Check if there's enough quantity to transfer
 		if (itemToTransfer.numberOfPieces < numberOfItems) {
-			console.log(`No enough picese to transefare to`);
 			return { error: `No enough picese to transefare to ` };
 		}
 
@@ -258,7 +252,6 @@ async function transferItems({ id, amount, inventoryId }) {
 
 		return { error: null };
 	} catch (error) {
-		console.log(`Error transfearing the item`);
 		return { error: `Error transfearing the item` };
 	}
 }

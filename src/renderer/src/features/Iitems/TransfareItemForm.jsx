@@ -20,8 +20,6 @@ function TransfareItemForm({ itemToTransferFrom, onCloseModal, totalItemWeight }
 	function onSubmit(data) {
 		let formData;
 
-		console.log(data);
-
 		if (data.sendBy === 'kilo') {
 			const amount = (data.amount * itemToTransferFrom.numberOfPieces) / totalItemWeight;
 			formData = {
