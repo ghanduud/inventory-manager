@@ -1,13 +1,13 @@
 import { contextBridge } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
 
-import { apiManufacture } from '../../models/Manufacture';
-import { apiCategory } from '../../models/Category';
-import { apiType } from '../../models/Type';
-import { apiSize } from '../../models/Size';
-import { apiInventory } from '../../models/Inventory';
-import { apiMaterial } from '../../models/Material';
-import { apiItem } from '../../models/Item';
+import { apiManufacture } from '../main/models/Manufacture';
+import { apiCategory } from '../main/models/Category';
+import { apiType } from '../main/models/Type';
+import { apiSize } from '../main/models/Size';
+import { apiInventory } from '../main/models/Inventory';
+import { apiMaterial } from '../main/models/Material';
+import { apiItem } from '../main/models/Item';
 
 const api = {};
 

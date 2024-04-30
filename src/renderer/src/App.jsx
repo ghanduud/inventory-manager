@@ -1,6 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { Route, Routes, Navigate, HashRouter } from 'react-router-dom';
 
 import GlobalStyles from './styles/GlobalStyles';
 import AppLayout from './components/AppLayout';
@@ -27,7 +27,7 @@ function App() {
 		<QueryClientProvider client={queryClient}>
 			<ReactQueryDevtools initialIsOpen={false} />
 			<GlobalStyles />
-			<BrowserRouter>
+			<HashRouter>
 				<Routes>
 					<Route element={<AppLayout />}>
 						<Route index element={<Navigate replace to='dashboard' />} />
@@ -41,7 +41,7 @@ function App() {
 						<Route path='materials' element={<Materials />} />
 					</Route>
 				</Routes>
-			</BrowserRouter>
+			</HashRouter>
 			<Toaster
 				position='top-center'
 				gutter={12}
