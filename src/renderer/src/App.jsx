@@ -30,7 +30,7 @@ function App() {
 			<HashRouter>
 				<Routes>
 					<Route element={<AppLayout />}>
-						<Route index element={<Navigate replace to='dashboard' />} />
+						<Route index element={<Navigate replace to='items' />} />
 						<Route path='dashboard' element={<Dashboard />} />
 						<Route path='items' element={<Items />} />
 						<Route path='categories' element={<Categories />} />

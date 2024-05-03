@@ -1,5 +1,5 @@
-appId: com.electron.app
-productName: inventory-manager
+appId: com.mshmsh.app
+productName: MSH-MSH
 directories:
   buildResources: build
 files:
@@ -11,7 +11,8 @@ files:
 asarUnpack:
   - resources/**
 win:
-  executableName: inventory-manager
+  executableName: MSH-MSH
+  icon: resources/icon.ico
 nsis:
   artifactName: ${name}-${version}-setup.${ext}
   shortcutName: ${productName}

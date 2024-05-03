@@ -39,17 +39,17 @@ function ItemTable() {
 		<Menus>
 			<Table columns='0.8fr 0.8fr 1fr .5fr 1.2fr .8fr .8fr .8fr .8fr 0.8fr 0.7fr 0.1fr'>
 				<Table.Header>
-					<div>Category</div>
-					<div>Material</div>
-					<div>Type</div>
-					<div>Size</div>
-					<div>Manufacture</div>
-					<div>Price / kilo</div>
-					<div>Weight / piece</div>
-					<div>Number of Pieces</div>
-					<div>Total weight</div>
-					<div>Total Price</div>
-					<div>Inventory</div>
+					<div>الصنف</div>
+					<div>الخامة</div>
+					<div>النوع</div>
+					<div>المقاس</div>
+					<div>المصنع</div>
+					<div>سعر الكيلو</div>
+					<div>وزن القطعة</div>
+					<div>عدد القطع</div>
+					<div>اجمالي الوزن</div>
+					<div>اجمالي السعر</div>
+					<div>المخزن</div>
 					<div></div>
 				</Table.Header>
 

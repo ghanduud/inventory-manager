@@ -1,4 +1,4 @@
-# inventory-manager
+# MSH-MSH
 
 An Electron application with React
 

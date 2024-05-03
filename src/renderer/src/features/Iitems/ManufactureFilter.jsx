@@ -31,7 +31,7 @@ function ManufactureFilter() {
 
 	return (
 		<FilterCell>
-			<label>Manufacture</label>
+			<label>المصنع</label>
 			<Select options={options} value={manufactureFilter} onChange={handleChange} type='white' />
 		</FilterCell>
 	);

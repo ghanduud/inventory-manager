@@ -30,7 +30,7 @@ function InventoryFilter() {
 
 	return (
 		<FilterCell>
-			<label>Inventory</label>
+			<label>المخزن</label>
 			<Select options={options} value={inventoryFilter} onChange={handleChange} type='white' />
 		</FilterCell>
 	);

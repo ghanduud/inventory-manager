@@ -31,7 +31,7 @@ function SizeFilter() {
 
 	return (
 		<FilterCell>
-			<label>Size</label>
+			<label>المقاس</label>
 			<Select options={options} value={sizeFilter} onChange={handleChange} type='white' />
 		</FilterCell>
 	);

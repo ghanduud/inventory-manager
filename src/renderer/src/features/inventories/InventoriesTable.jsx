@@ -15,10 +15,10 @@ function InventoriesTable() {
 		<Menus>
 			<Table columns='1fr 0.8fr 0.8fr 0.8fr 0.1fr'>
 				<Table.Header>
-					<div>Location</div>
-					<div>Current Capacity</div>
-					<div>Max Capacity</div>
-					<div>Percent</div>
+					<div>المكان</div>
+					<div>السعة الحالية</div>
+					<div>السعة النهائية</div>
+					<div>النسبة</div>
 					<div></div>
 				</Table.Header>
 

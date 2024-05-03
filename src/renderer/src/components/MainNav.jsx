@@ -56,52 +56,52 @@ function MainNav() {
 	return (
 		<nav>
 			<NavList>
-				<li>
+				{/* <li>
 					<StyledNavLink to='/dashboard'>
 						<HiOutlineHome />
 						<span>Home</span>
 					</StyledNavLink>
-				</li>
+				</li> */}
 				<li>
 					<StyledNavLink to='/items'>
 						<HiOutlineTableCells />
-						<span>Items</span>
+						<span>البضائع</span>
 					</StyledNavLink>
 				</li>
 				<li>
 					<StyledNavLink to='/categories'>
 						<BiCategoryAlt />
-						<span>Categories</span>
+						<span>الاصناف</span>
 					</StyledNavLink>
 				</li>
 				<li>
 					<StyledNavLink to='/sizes'>
 						<IoMdResize />
-						<span>Sizes</span>
+						<span>المقاسات</span>
 					</StyledNavLink>
 				</li>
 				<li>
 					<StyledNavLink to='/types'>
 						<FiType />
-						<span>Types</span>
+						<span>الانواع</span>
 					</StyledNavLink>
 				</li>
 				<li>
 					<StyledNavLink to='/inventories'>
 						<HiOutlineBuildingOffice />
-						<span>Inventories</span>
+						<span>المخازن</span>
 					</StyledNavLink>
 				</li>
 				<li>
 					<StyledNavLink to='/manufactures'>
 						<LuFactory />
-						<span>Manufactures</span>
+						<span>المصانع</span>
 					</StyledNavLink>
 				</li>
 				<li>
 					<StyledNavLink to='/materials'>
 						<GiMaterialsScience />
-						<span>Materials</span>
+						<span>الخامات</span>
 					</StyledNavLink>
 				</li>
 			</NavList>

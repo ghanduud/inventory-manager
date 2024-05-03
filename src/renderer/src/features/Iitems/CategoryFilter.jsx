@@ -30,7 +30,7 @@ function CategoryFilter() {
 
 	return (
 		<FilterCell>
-			<label>Category</label>
+			<label>الصنف</label>
 			<Select options={options} value={categoryFilter} onChange={handleChange} type='white' />
 		</FilterCell>
 	);

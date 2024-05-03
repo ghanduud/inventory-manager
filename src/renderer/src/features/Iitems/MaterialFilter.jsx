@@ -31,7 +31,7 @@ function MaterialFilter() {
 
 	return (
 		<FilterCell>
-			<label>Material</label>
+			<label>الخامة</label>
 			<Select options={options} value={materialFilter} onChange={handleChange} type='white' />
 		</FilterCell>
 	);

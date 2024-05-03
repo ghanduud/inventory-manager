@@ -16,9 +16,9 @@ function ManufactureTable() {
 		<Menus>
 			<Table columns='1fr 0.8fr 0.8fr 0.1fr'>
 				<Table.Header>
-					<div>Name</div>
-					<div>Phone Number</div>
-					<div>Email</div>
+					<div>الاسم</div>
+					<div>رقم الهاتف</div>
+					<div>الريد الالكتروني</div>
 
 					<div></div>
 				</Table.Header>

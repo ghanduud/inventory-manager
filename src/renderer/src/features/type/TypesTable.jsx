@@ -16,7 +16,7 @@ function TypesTable() {
 		<Menus>
 			<Table columns='1fr 0.1fr'>
 				<Table.Header>
-					<div>Name</div>
+					<div>الاسم</div>
 					<div></div>
 				</Table.Header>
 

@@ -1,5 +1,5 @@
 {
-	"name": "inventory-manager",
+	"name": "MSH-MSH",
 	"version": "1.0.0",
 	"description": "An Electron application with React",
 	"main": "./out/main/index.js",
@@ -21,7 +21,7 @@
 		"@electron-toolkit/preload": "^3.0.0",
 		"@electron-toolkit/utils": "^3.0.0",
 		"electron-updater": "^6.1.7",
-		"sequelize": "^6.37.1",
+		"sequelize": "^6.37.3",
 		"sqlite-electron": "^3.0.5",
 		"sqlite3": "^5.1.7"
 	},
@@ -46,6 +46,8 @@
 		"react-router-dom": "^6.22.3",
 		"recharts": "^2.12.2",
 		"styled-components": "^6.1.8",
-		"vite": "^5.0.12"
+		"vite": "^5.0.12",
+		"vite-aliases": "^0.11.6",
+		"vite-plugin-copy": "^0.1.6"
 	}
 }

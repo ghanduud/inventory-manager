@@ -31,7 +31,7 @@ function TypeFilter() {
 
 	return (
 		<FilterCell>
-			<label>Types</label>
+			<label>النوع</label>
 			<Select options={options} value={typeFilter} onChange={handleChange} type='white' />
 		</FilterCell>
 	);
